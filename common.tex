@@ -1,0 +1,94 @@
+%% import packages to avoid too many imports on main file
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{ifthen}
+\usepackage{lipsum}
+\usepackage{mdframed}
+\usepackage{tcolorbox}
+\usepackage{xcolor}
+% \usepackage[sfdefault]{plex-sans}
+\usepackage{tikz}
+
+\tcbuselibrary{breakable}
+
+\newcommand{\R}{\ensuremath{\mathbb{R}}}
+\newcommand{\N}{\ensuremath{\mathbb{N}\hspace{1.0mm}}}
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}}
+\newcommand{\Q}{\ensuremath{\mathbb{Q}}}
+\newcommand{\C}{\ensuremath{\mathbb{C}}}
+
+% formatting
+\newcommand{\hs}{\hspace{1.0mm}} % horizontal space; mostly in equations
+\makeatletter
+\def\exam@MakeFramed#1{\begin{mdframed}}
+\def\endexam@MakeFramed{\end{mdframed}}
+\makeatother
+
+
+\newtcolorbox{customsolutionbox}[1][]{
+    colback=white,
+    colframe=gray!50!black,
+    sharp corners=southwest,
+    rounded corners=southeast,
+    title=Answer,
+    breakable,
+    #1 % answer
+}
+
+% \newcommand{\customequation}[1]{
+%     \vspace{5.0mm}
+%     \begin{center}
+%         \begin{align*}
+%             #1
+%         \end{align*}
+%     \end{center}
+%     % \vspace{5.0mm}
+% }
+
+%% credit statement
+\newcommand{\creditstatement}[1][alone]{
+    % \ifthenelse{\equal{#1}{alone}}{
+    \begin{center}
+        {\fontsize{14}{16}\selectfont \textbf{\textit{Credit statement: I worked alone on this assignment with reference to: #1} \\}}
+    \end{center}
+    % }{
+    % \begin{center}
+    %     {\fontsize{14}{16}\selectfont\textbf{\textit{Credit statement: I discussed the problems with #1, but worked alone on my solutions} \\}}
+    % \end{center}
+    % }
+}
+
+%% heading
+\newcommand{\customheading}[4]{ % #1=Date, #2=Title
+    \fbox{%
+        \begin{minipage}{\textwidth}
+        \begin{tikzpicture}[overlay, remember picture]
+            \node[anchor=north west, font=\bfseries\itshape] at (0,0) {Abdibaset Bare};
+            \node[anchor=north east, font=\bfseries] at (\textwidth,0) {#1};
+            \node[anchor=north, font=\Large\bfseries\itshape] at (\textwidth/2,-1.1) {#2};
+            \node[anchor=south west, font=\itshape] at (0,-3) {#3};
+            \node[anchor=south east, font=\itshape] at (\textwidth,-3) {#4};
+        \end{tikzpicture}
+        \vspace{3cm}
+        \end{minipage}%
+    }
+}
+
+\newcommand{\customfigure}[3]{
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=25mm]{#1}
+        \caption{#2}
+        \label{fig:#3}
+    \end{figure}
+}
+
+%% definitions
+\newtheorem{theorem}{Theorem}
+\newtheorem*{definition}{Definition}
