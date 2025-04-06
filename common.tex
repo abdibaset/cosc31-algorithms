@@ -2,8 +2,11 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{algorithm}
+% \usepackage{algpseudocode}
 \usepackage{enumerate}
 \usepackage{enumitem}
+\usepackage{etoolbox}
 \usepackage{float}
 \usepackage{graphicx}
 \usepackage{hyperref}
@@ -14,8 +17,9 @@
 \usepackage{xcolor}
 % \usepackage[sfdefault]{plex-sans}
 \usepackage{tikz}
-
-\tcbuselibrary{breakable}
+\tcbuselibrary{listings, breakable, skins}
+\usepackage{algpseudocode}
+\usepackage{algorithmicx}
 
 \newcommand{\R}{\ensuremath{\mathbb{R}}}
 \newcommand{\N}{\ensuremath{\mathbb{N}\hspace{1.0mm}}}
@@ -89,6 +93,34 @@
     \end{figure}
 }
 
+\newtcolorbox{algobox}[1][]{
+  colback=white, % light green background
+  colframe=black,   % border color
+  arc=2mm,
+  boxrule=0.5pt,
+  fonttitle=\bfseries,
+  title=#1,
+  enhanced,
+  sharp corners,
+  left=1mm, right=1mm, top=1mm, bottom=1mm
+}
+
 %% definitions
 \newtheorem{theorem}{Theorem}
 \newtheorem*{definition}{Definition}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% Trick to suppress EndFor and EndFunction output (cleanest and safest)
+\makeatletter
+\newcommand{\hideendkeywords}{
+  \renewcommand{\alglinenumber}[1]{\scriptsize##1}
+  \renewcommand{\ALG@beginalgorithmic}{\begin{algorithmic}[1]}
+  \renewcommand{\ALG@endalgorithmic}{\end{algorithmic}}
+  \algrenewcommand{\alglinenumber}[1]{\scriptsize##1}
+  \renewcommand{\algorithmicend}{}
+}
+\makeatother
+
+\hideendkeywords % apply hiding

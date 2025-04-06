@@ -1,0 +1,24 @@
+\section*{Question 1}
+We represent a degree \(n\) polynomial, \(p(x) = a_0 + a_1x + a_2x^2 + \cdots + a_nx^n\), by an array, \(A[0 \dots n]\),
+where \(A[i] = a_i\) for each index \(i \in \{0, 1, \dots, n\}\). In this problem, your goal is to design an algorithm
+\textit{EvaluatePolynomial(A, x)} that takes such an array \(A\) (which represents a polynomial \(p\)) and a number
+\(x\) as input, and computes \(p(x)\).
+
+For this problem,
+\begin{parts}
+
+\part Design an algorithm \textit{SimpleEvaluatePolynomial(A, x)}, which performs at most \(O(n)\) multiplications and \(O(n)\) additions.
+
+
+\begin{customsolutionbox}
+    \begin{algorithmic}[1]
+        \Function{SimpleEvaluatePolynomial}{A, x}
+            \State \(p \gets A[0]\)
+            \For{\(i \gets 1\) to \(n\)}
+                \State \(p \gets p + A[i] \cdot x^i\)
+            \EndFor
+            \State \Return \(p\)
+        \EndFunction
+    \end{algorithmic}
+\end{customsolutionbox}
+\end{parts}
