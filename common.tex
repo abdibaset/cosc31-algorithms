@@ -2,8 +2,11 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
 \usepackage{algorithm}
-% \usepackage{algpseudocode}
+\usepackage{algpseudocode}
+% \usepackage{algorithmicx}
+% \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
 \usepackage{enumerate}
 \usepackage{enumitem}
 \usepackage{etoolbox}
@@ -18,17 +21,17 @@
 % \usepackage[sfdefault]{plex-sans}
 \usepackage{tikz}
 \tcbuselibrary{listings, breakable, skins}
-\usepackage{algpseudocode}
-\usepackage{algorithmicx}
-
+\usepackage{float}
+\usepackage{enumitem}
+\setlistdepth{100}
 \newcommand{\R}{\ensuremath{\mathbb{R}}}
 \newcommand{\N}{\ensuremath{\mathbb{N}\hspace{1.0mm}}}
 \newcommand{\Z}{\ensuremath{\mathbb{Z}}}
 \newcommand{\Q}{\ensuremath{\mathbb{Q}}}
 \newcommand{\C}{\ensuremath{\mathbb{C}}}
-
 % formatting
 \newcommand{\hs}{\hspace{1.0mm}} % horizontal space; mostly in equations
+\renewcommand{\thealgorithm}{}  % removes numbering from algorithm annotation
 \makeatletter
 \def\exam@MakeFramed#1{\begin{mdframed}}
 \def\endexam@MakeFramed{\end{mdframed}}

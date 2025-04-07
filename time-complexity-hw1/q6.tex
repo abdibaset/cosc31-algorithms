@@ -1,0 +1,31 @@
+\textbf{Time Complexity Determination}: Express the time complexity of the following program fragment as a 
+Big-Theta asymptotic, in terms of $n$. You must also prove that your answer is correct.
+
+\begin{algorithm}
+    \SetAlgoLined
+    \DontPrintSemicolon
+    \For{$i \gets 1$ \KwTo $n$}{\;  
+    \For{$j \gets 1$ \KwTo $i$}{\; 
+        \For{$k \gets 1$ \KwTo $j$}{\;
+            $s \gets s + i - j \cdot k$\;  
+        }
+    }
+}
+\end{algorithm}
+\begin{customsolutionbox}
+    Time complexity is $\Theta(n^4)$. We see that for each $k$, $s \gets s + i - j \cdot k$ has $\Theta(1)$ which 
+    executed $j$ times for $j^{th}$ iteration of the second loop. Let's call the aforementioned number of 
+    operations $m$. $m$ is executed $i$ times for the $i^{th}$ iteration.
+    \begin{align}
+        \text{total operations} &= \sum_{i=1}^{n}m \cdot i \\
+        &=  \sum_{i=1}^{n} \left(\sum_{j=1}^{i} \Theta(1) \cdot j\right)\cdot i \\
+        &\geq \sum_{i=1}^{n} \Theta(i^2) \cdot i \\
+        &= \sum_{i=1}^{n} \Theta(i^3) \\
+        &= \frac{n^2(n+1)^2}{4} \\
+        &= \frac{1}{4} \cdot \left(n^4+2n^3+n^2\right) \\
+        &\geq \frac{1}{4} \cdot \left(n^4+2n^4+n^4\right) \\
+        &=\frac{1}{4} \cdot 4n^4 \\
+        &= n^4
+    \end{align}
+Therefore, as shown above, the number of operations are $n^4$, hence the time complexity is $\Theta(n^4)$.
+\end{customsolutionbox}

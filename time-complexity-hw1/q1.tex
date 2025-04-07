@@ -1,24 +1,58 @@
-\section*{Question 1}
-We represent a degree \(n\) polynomial, \(p(x) = a_0 + a_1x + a_2x^2 + \cdots + a_nx^n\), by an array, \(A[0 \dots n]\),
-where \(A[i] = a_i\) for each index \(i \in \{0, 1, \dots, n\}\). In this problem, your goal is to design an algorithm
+We represent a degree n polynomial, \(p(x) = a^0 + a_1x + a_2x^2 +···+ a_nx^n\), by an array, \(A[0 . . . n]\),
+where \(A[i] = a_i\) for each index \(i \in \{0, 1, . . . , n\}\). In this problem, your goal is to design an algorithm
 \textit{EvaluatePolynomial(A, x)} that takes such an array \(A\) (which represents a polynomial \(p\)) and a number
-\(x\) as input, and computes \(p(x)\).
+x as input, and computes \(p(x)\). 
 
 For this problem,
 \begin{parts}
+    \part Design an algorithm \textit{SimpleEvaluatePolynomial(A, x)}, which performs at most \(O(n)\) multiplications and \(O(n)\) additions.
 
-\part Design an algorithm \textit{SimpleEvaluatePolynomial(A, x)}, which performs at most \(O(n)\) multiplications and \(O(n)\) additions.
+    % \leavevmode
+    \begin{customsolutionbox}
+        \begin{algorithm}[H]
+            \SetAlgoLined
+            \caption{SimpleEvaluatePolynomial}
+            \SetKwFunction{FSimpleEvaluatePolynomial}{SimpleEvaluatePolynomial}
+            \SetKwProg{Fn}{Function}{:}{}
+            \Fn{\FSimpleEvaluatePolynomial{$A, x$}}{
+                $q \gets 1$\\
+                $p \gets A[0]$\\
+                \For{$i \gets 1$ \KwTo $n$}{
+                    $p \gets p + q \cdot A[i]$\\
+                    $q \gets q \cdot x$
+                }
+                \KwRet $p$\;
+            }
+        \end{algorithm}
 
+    \textbf{Analysis}: The simple algorithm above does $2n$ multiplications and $n$ additions. For each iteration of the loop, 
+    two multiplications are done, $A[i] \cdot q$ and $q \cdot n$. Ignoring the constants we have at most $O(n)$ multiplications and $O(n)$ additions
+    \end{customsolutionbox}
 
-\begin{customsolutionbox}
-    \begin{algorithmic}[1]
-        \Function{SimpleEvaluatePolynomial}{A, x}
-            \State \(p \gets A[0]\)
-            \For{\(i \gets 1\) to \(n\)}
-                \State \(p \gets p + A[i] \cdot x^i\)
-            \EndFor
-            \State \Return \(p\)
-        \EndFunction
-    \end{algorithmic}
-\end{customsolutionbox}
+    \part Design an algorithm \textit{EfficientEvaluatePolynomial(A, x)}, which performs at most $n$ multiplications
+    and $n$ additions.
+    \begin{customsolutionbox}
+        Using the Horner's method, the polynomial can be written nested form as shown below
+        \[p(x) = a_0 + a_1x + a_2x^2 + \ldots + a_nx^n\]
+        \[p(x) = a_0 + x(a_1 + x(a_2 + x(a_3 + a_x)\ldots))\]
+        Example the following polynomial $p(x) = 3x^3 + 2x^2 + x + 1$ can be nested follows:
+        \[p(x) = x(1 + x(2 + 3x)) + 1\]
+        To evaluate $p(x)$ in the example above, we can start by evaluating the term $2 + 3x$ where is the $3$ corresponds to $A[n]$
+
+        \begin{algorithm}[H]
+            \SetAlgoLined
+            \caption{EfficientEvaluatePolynomial}
+            \SetKwFunction{FEfficientEvaluatePolynomial}{EfficientEvaluatePolynomial}
+            \SetKwProg{Fn}{Function}{:}{}
+            \Fn{\FEfficientEvaluatePolynomial{$A, x$}}{
+                $p \gets A[n]$ \\
+                \For{$i \gets n-1$ \KwTo 1}{
+                    $p \gets p + A[i] \cdot x$ 
+                }
+                \KwRet $p$
+            }
+        \end{algorithm}
+        \textbf{Analysis}: The above efficient algorithm doesn at most $n$ multiplications and $n$ additions, where each iteration of the loop does a $1$ 
+        multiplication and $1$ addition
+    \end{customsolutionbox}
 \end{parts}
