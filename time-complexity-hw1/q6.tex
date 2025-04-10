@@ -3,7 +3,7 @@ Big-Theta asymptotic, in terms of $n$. You must also prove that your answer is c
 
 \begin{algorithm}
     \SetAlgoLined
-    \DontPrintSemicolon
+    % \DontPrintSemicolon
     \For{$i \gets 1$ \KwTo $n$}{\;  
     \For{$j \gets 1$ \KwTo $i$}{\; 
         \For{$k \gets 1$ \KwTo $j$}{\;
@@ -13,19 +13,31 @@ Big-Theta asymptotic, in terms of $n$. You must also prove that your answer is c
 }
 \end{algorithm}
 \begin{customsolutionbox}
-    Time complexity is $\Theta(n^4)$. We see that for each $k$, $s \gets s + i - j \cdot k$ has $\Theta(1)$ which 
-    executed $j$ times for $j^{th}$ iteration of the second loop. Let's call the aforementioned number of 
-    operations $m$. $m$ is executed $i$ times for the $i^{th}$ iteration.
+    Time complexity is $\Theta(n^3)$. We see that for each $k$, $s \gets s + i - j \cdot k$ has $\Theta(1)$ which 
+    executed $j$ times for $j^{th}$ iteration of the second loop.
     \begin{align}
-        \text{total operations} &= \sum_{i=1}^{n}m \cdot i \\
-        &=  \sum_{i=1}^{n} \left(\sum_{j=1}^{i} \Theta(1) \cdot j\right)\cdot i \\
-        &\geq \sum_{i=1}^{n} \Theta(i^2) \cdot i \\
-        &= \sum_{i=1}^{n} \Theta(i^3) \\
-        &= \frac{n^2(n+1)^2}{4} \\
-        &= \frac{1}{4} \cdot \left(n^4+2n^3+n^2\right) \\
-        &\geq \frac{1}{4} \cdot \left(n^4+2n^4+n^4\right) \\
-        &=\frac{1}{4} \cdot 4n^4 \\
-        &= n^4
+        T(n) &=  \sum_{i=1}^{n} \sum_{j=1}^{i} \Theta(1) \cdot j \\
+        &= \sum_{i=1}^{n} \Theta\left(\frac{i^2 + i}{2}\right)\\
+        &= \frac{1}{2}\left(\sum_{i=1}^{n} \Theta(i^2)+\sum_{i=1}^{n}  \Theta(i)\right)\\
+        &= \frac{1}{2} \cdot\left(\frac{n(n+1)(2n+1)}{6}+ \frac{n(n+1)}{2}\right) \\
+        &= \left(\frac{2n^3+3n^2+n}{12}\right) + \left(\frac{n^2+n}{4}\right) \\
+        &=  \frac{2n^3+3n^2+n+3n^2+3n}{12} \\
+        &=  \frac{2n^3+6n^2+4n}{12} \\
     \end{align}
-Therefore, as shown above, the number of operations are $n^4$, hence the time complexity is $\Theta(n^4)$.
+    To see that $T(n) = \mathcal{O}(n^3)$, we can see that:
+    \begin{align}
+        T(n) &= \frac{2n^3+6n^2+4n}{12} \\
+        &\leq  \frac{2n^3+6n^3+4n^3}{12} \\
+        &= \frac{12}{12} \cdot n^3 \\
+        &= n^3
+    \end{align}
+    Therefore, $T(n) = \mathcal{O}(n^3)$ for some $n_0$ and $c$ such that $n_0 = 1$ and $c = 1$. \\
+    To see that $T(n) = \Omega(n^3)$, we can see that:
+    \begin{align}
+        T(n) &= \frac{2n^3+6n^2+4n}{12} \\
+        &\geq  \frac{2n^3}{12} \\
+        &= \frac{1}{6} n^3
+    \end{align}
+    Therefore, $T(n) = \Omega(n^3)$ for some $n_0$ and $c$ such that $n_0 = 1$ and $c = \frac{1}{6}$, hence
+    $T(n) = \Theta(n^3)$. \\
 \end{customsolutionbox}

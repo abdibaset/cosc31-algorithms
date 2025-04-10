@@ -5,15 +5,17 @@ Exponentials are of different orders
     \part Prove that $2^n = \mathcal{O}(3^n)$
     \begin{customsolutionbox}
          $2^n = \mathcal{O}(3^n)$ if $\exists n_0, c > 0, \forall n_0 > n: 2^n \leq c \cdot 3^n$. The inequality
-         can be re-written as follows: \[2^n \leq c \cdot  3^n \equiv \left(\frac{2}{3}\right)^n \leq c\]
-        As $0 < \left(\frac{2}{3}\right)^n < 1$ as $\forall n$, hence $2^n = \mathcal{O}(3^n)$.
+         can be re-arranged as follows: \[2^n \leq c \cdot  3^n \equiv \left(\frac{2}{3}\right)^n \leq c\]
+        As $0 < \left(\frac{2}{3}\right)^n < 1$, $\forall n$. Consider a suffiently large $n_0$ e.g,
+        $n_0=10^5$, and $c=1$, we see that $\left(\frac{2}{3}\right)^{10^5} < 1$ hence $2^n = \mathcal{O}(3^n)$.
     \end{customsolutionbox}
 
     \part Prove that $3^n \not= \mathcal{O}(2^n)$
     \begin{customsolutionbox}
         Suppose not, that's $3^n = \mathcal{O}(2^n)$, then we have that $\exists n_0, c > 0, \forall n_0 > n: 3^n \leq c \cdot 2^n$. The inequality
-        can be re-written as follows
+        can be re-arranged as follows
         \[3^n \leq c \cdot 2^n \equiv \left(\frac{3}{2}\right)^n \leq c\]
-        As $n$ grows to infinity, there exists some $n$ such that $\left(\frac{3}{2}\right)^n > c$ hence the contradition.
+        Consider,$n_0 = 3, c = 1$, we see that $1.5^3 > 1$ hence the contradiction that for $\forall n$, $\left(\frac{3}{2}\right)^n \leq c$.
+        Therefore, $3^n \not= \mathcal{O}(2^n)$.    
     \end{customsolutionbox}
 \end{parts}

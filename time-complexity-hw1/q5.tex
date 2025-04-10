@@ -1,0 +1,42 @@
+For each pair of functions \((f (n), g(n))\) below, you must state and prove the strongest possible relation-
+ship between them
+
+\begin{parts}
+    \part $6^{\lg n}$ and $5^{\lg n}$
+    \begin{customsolutionbox}
+        The strongest possible relationship is: 
+        \[6^{\lg n} = \omega(5^{\lg n})\]
+        This is because for suffiently 
+        large $n$, $6^{\lg n}$ grows strictly faster than $5^{\lg n}$. 
+        More formally, we see that:
+        \[ \displaystyle \lim_{n \to \infty} \frac{g(n)}{f(n)} = \lim_{n \to \infty} \left(\frac{5}{6}\right)^{\lg n} = 0\]
+        which satisfies the condition for the little-omega definition.
+    \end{customsolutionbox} 
+
+    \part  $f(n)$ and $n^2$, where $f$ is defined as follows: $f(n) = 6n$ if $n$ is even; else $f(n)$ = $5n^2$
+    \begin{customsolutionbox}
+        We have 
+        \[f(n) =
+            \begin{cases}
+                6n & \text{if } n\mod2 = 0 \\
+                5n^2 & \text{otherwise}
+            \end{cases}
+        \]
+        $f(n) = \mathcal{O}(g(n))$. This means $\exists n_0, c > 0, \forall n > n_0: f(n) \leq c \cdot n^2$. \\
+        
+        Case 1), For $f(n) = 6n$, consider $n_0 = 6$, and $c = 1$, we see that $6\cdot 6 \leq 1 \cdot 6^2$ which is true, and holds for a suffiently large $n$. \\
+        Case 2), For $f(n) = 5n^2$, consider $n_0 = 1$, and $c = 6$, we see that $5 \cdot 1^2 \leq 6 \cdot 1^2$. \\
+        Therefore, both cases $f(n) = \mathcal{O}(g(n))$ \\
+
+        $f(n) \not= \Omega(g(n))$ globally for $f(n)$. Suppose for the sake of contradiction, $f(n) = \Omega(g(n))$, we have 
+        $\exists n_0, c > 0, \forall n > n_0: f(n) \geq c \cdot g(n)$. Consider, $f(n) = 6n$ where $n_0=7, c=1$, we see  
+        that $6 \cdot 7 < 1\cdot 7^2$, hence the contradiction. Therefore $f(n) \not= \Omega(g(n))$, and 
+        $f(n) \not= \Theta(g(n))$. \\
+
+        $f(n) \not= o(g(n))$ because $\displaystyle \lim_{n \to \infty} \frac{f(n)}{g(n)}$ varies, that's 
+        $\displaystyle \lim_{n \to \infty} \frac{6n}{n^2} = 0$, but $\displaystyle \lim_{n \to \infty} \frac{5n^2}{n^2} = 1$. \\
+
+        As shown above, the strongest relation is $f(n) = \mathcal{O}(g(n))$.
+
+    \end{customsolutionbox}
+\end{parts}

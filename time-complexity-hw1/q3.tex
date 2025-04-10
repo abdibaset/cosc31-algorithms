@@ -1,9 +1,38 @@
 Prove that  $\log_{a} n = \Theta (\log_{b}) n$ for all $a, b > 1$.
 \begin{customsolutionbox}
-    For $\log_{a} n = \Theta (\log_{b}) n$ then it must be that $\log_{a} n = \Omega (\log_{b} n)$ and $\log_{a} n = \mathcal{O} (\log_{b}) n$
-    Using the chance of base rule, $\log_{a}n$ can be written as:
-    \[\log_{a}n = \frac{\log_{b}n}{\log_{b}a} \equiv \frac{1}{\log_{b}a} \cdot \log_{b}n\]
-    By the definition $\log_{a} n = \mathcal{O} (\log_{b}) n$, if \[\exists n_0, c > 0, \forall n > n_0: \log_{a}n\leq c \cdot \log_{b}n\]
-    If we consider $n_0 = 1$, and $c = \frac{1}{\log_{b}a}$, then $\log_{a} n = \mathcal{O} (\log_{b}) n$. To show that $\log_{a} n = \Omega (\log_{b} n)$, we see that:
-    \[\exists n_0, c > 0, \forall n > n_0: \log_{a}n \geq c \cdot \log_{b}n\]where $n_0 = 1$, and $c = \frac{1}{\log_{b}a}$
-\end{customsolutionbox}
+    To show that $\log_{a} n = \Theta(\log_{b} n)$ for all $a, b > 1$, we must prove that:
+    \[
+    \log_{a} n = \mathcal{O}(\log_{b} n) \quad \text{and} \quad \log_{a} n = \Omega(\log_{b} n)
+    \]
+    
+    Using the change of base formula:
+    \[
+    \log_{a} n = \frac{\log_{b} n}{\log_{b} a} = \frac{1}{\log_{b} a} \cdot \log_{b} n
+    \]
+    
+    Big-O proof: We want to show that:
+    \[
+    \exists n_0, c > 0, \forall n > n_0: \log_{a} n \leq c \cdot \log_{b} n
+    \]
+    Let $c = \frac{1}{\log_{b} a}$, and $n_0 = 1$. Then for all $n > 1$:
+    \[
+    \log_{a} n = \frac{1}{\log_{b} a} \cdot \log_{b} n \leq c \cdot \log_{b} n
+    \]
+    So $\log_{a} n = \mathcal{O}(\log_{b} n)$.
+    
+    Big-Omega proof: We want to show that:
+    \[
+    \exists n_0, c > 0, \forall n > n_0: \log_{a} n \geq c \cdot \log_{b} n
+    \]
+    Again, let $c = \frac{1}{\log_{b} a}$ and choose $n_0 = 1$. Then for all $n > 1$:
+    \[
+    \log_{a} n = \frac{1}{\log_{b} a} \cdot \log_{b} n \geq c \cdot \log_{b} n
+    \]
+    So $\log_{a} n = \Omega(\log_{b} n)$.
+    
+    Since both bounds hold, we conclude:
+    \[
+    \log_{a} n = \Theta(\log_{b} n)
+    \]
+    \end{customsolutionbox}
+    

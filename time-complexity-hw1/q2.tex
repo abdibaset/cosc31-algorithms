@@ -1,9 +1,27 @@
 Prove that $f(n) = \Omega(g(n))$ if and only if $g(n) = \mathcal{O}(f(n))$
 
 \begin{customsolutionbox}
-    By the definition $f(n) = \Omega (g(n))$ if \[\exists n_0, c > 0, \forall n > n_0 : f(n) \geq c \cdot g(n)\] 
-    and $g(n) = \mathcal{O}f(n)$ if 
-    \[\exists n_0, c' > 0, \forall n > n_0: g(n) \leq c' \cdot f(n)\] the inequality can be written as: 
-    \[\exists n_0, c' > 0, \forall n > n_0: \frac{1}{c'} \cdot g(n) \leq f(n)\]
-    which matches the form required for the definition of $f(n) = \Omega(g(n))$ with constant \(c = \frac{1}{c'}\).
+    This means $f(n) = \Omega(g(n)) \iff g(n) = \mathcal{O}(f(n))$ \\
+    
+    Starting with $f(n) = \Omega(g(n)) \Rightarrow g(n) = \mathcal{O}(f(n))$, we have that $f(n) = \Omega(g(n))$ if
+        \begin{equation}
+        \exists n_0, c > 0, \forall n > n_0 : f(n) \geq c \cdot g(n)
+        \end{equation}
+    This can be re-arranged as follows:
+        \begin{equation} 
+        \exists n_0, c > 0, \forall n > n_0 : \frac{1}{c} \cdot f(n) \geq g(n)
+        \end{equation}
+    We see that statement(2) follows the definition of $g(n) = \mathcal{O}(f(n))$, hence $f(n) = \Omega(g(n)) \Rightarrow g(n) = \mathcal{O}(f(n))$ \\
+    
+    To show $g(n) = \mathcal{O}(f(n)) \Rightarrow f(n) = \Omega(g(n))$, we have $g(n) = \mathcal{O}(f(n))$ if
+        \begin{equation}
+        \exists n_0', c' > 0, \forall n > n_0' : g(n) \leq c' \cdot f(n)
+        \end{equation}
+    This can be re-arranged as follows:
+        \begin{equation}
+        \exists n_0', c' > 0, \forall n > n_0' : \frac{1}{c'} \cdot g(n) \leq f(n)
+        \end{equation}
+    We see that statement(4) follows the definition of $f(n) = \Omega(g(n))$, hence $g(n) = \mathcal{O}(f(n)) \Rightarrow f(n) = \Omega(g(n))$ \\
+    Therefore, $f(n) = \Omega(g(n)) \iff g(n) = \mathcal{O}(f(n))$.
 \end{customsolutionbox}
+    

@@ -18,8 +18,8 @@ For this problem,
                 $q \gets 1$\\
                 $p \gets A[0]$\\
                 \For{$i \gets 1$ \KwTo $n$}{
-                    $p \gets p + q \cdot A[i]$\\
-                    $q \gets q \cdot x$
+                    $q \gets q \cdot x$ \\
+                    $p \gets p + q \cdot A[i]$
                 }
                 \KwRet $p$\;
             }
@@ -46,8 +46,8 @@ For this problem,
             \SetKwProg{Fn}{Function}{:}{}
             \Fn{\FEfficientEvaluatePolynomial{$A, x$}}{
                 $p \gets A[n]$ \\
-                \For{$i \gets n-1$ \KwTo 1}{
-                    $p \gets p + A[i] \cdot x$ 
+                \For{$i \gets n - 1$ \KwTo $0$}{
+                    $p \gets p \cdot x + A[i]$
                 }
                 \KwRet $p$
             }

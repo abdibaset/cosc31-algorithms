@@ -1,0 +1,77 @@
+Suppose there are n players with IDs $1, 2, . . . , n$. Every possible pair $(i, j)$ of players competed and the
+results are recorded in an $n \times n$ matrix $A$. In particular, in the match between $i$ and $j$, if i won against
+j, then $A[i, j]$ is set to $1$ and $A[j, i]$ is set to $0$; on the other hand, if the match resulted in a tie, both
+$A[i, j]$ and $A[j, i]$ are set to $0$. For each $i$, since $i$ does not compete with self, $A[i, i]$ has no meaning
+and its value can be anything. We call a player i a super athlete if i won against every other player.
+Here is a simple algorithm to identify a super athlete, if one exists.
+
+\begin{algorithm}
+    \SetAlgoLined
+    \caption{super-athlete}
+    \KwIn{A positive integer \(n\) and an \(n \times n\) matrix \(A\), as described above.}
+    \KwOut{The index \(i\) of a super athlete, or \(\perp\) if no super athlete exists.}
+
+    \For{$i \gets 1$ \KwTo $n$}{
+        \If{\text{all entries in the ith row of matrix} $A$, leaving out the entry $A[i, i]$, are $1$}{
+            \Return $i$
+        }
+    }
+    \Return $\perp$
+\end{algorithm}
+
+\begin{parts}
+    \part Prove that there is at most one super athlete?
+        \begin{customsolutionbox}
+            For a player at row $i$, and player any $j$ where $1 \leq j \leq$ and $i \not=j$, if $A[i, j] = 1$, then 
+            $A[j, i] = 0$ because there can only be one winner in a match, therefore, there is atmost one supper player.
+        \end{customsolutionbox} 
+    \part In the algorithm above, Line 4 involves reading all entries of row $i$, with the exception of the ith
+    entry of that row. Thus, Line 4 involves reading $n - 1$ entries of the matrix. Since Line $4$ can be
+    executed up to $n$ times, the algorithm might read up to $\Theta(n^2)$ matrix entries. Design a cleverer
+    algorithm that reads at most $O(n)$ entries of the matrix
+
+    \begin{customsolutionbox}
+        \begin{algorithm}[H]
+            \SetAlgoLined
+            \caption{Super Player}
+            \SetKwFunction{FSuperPlayer}{SuperPlayer}
+            \SetKwProg{Fn}{Function}{}{}
+            \Fn{\FSuperPlayer{$n, A$}}{
+                $super \gets 0$ \\
+                \For{$i \gets 1$ \KwTo $n$} {
+                    \If{$super \neq i$ \textbf{and} $A[super][i] = 0$}{
+                        $super \gets i$
+                    }
+                } 
+                \For{$m \gets 1$ \KwTo $super-1$}{
+                    \If{$A[super][m] \neq 1$}{
+                        \KwRet $\perp$
+                    }
+                }
+                \KwRet $super$
+            }
+        \end{algorithm}
+    \end{customsolutionbox}
+    \part Argue why your algorithm is correct. (You should argue both that the output is correct and that
+    it reads at most $\mathcal{O}(n)$ entries of the matrix.)
+    \begin{customsolutionbox}
+        For the optimized we do two inspections, 1) to identify the likely super players, 2) verify if the likey super 
+        player is indeed a super player or not. \\
+        
+        In the first loop for the algorithm in part b), we keep track of some 
+        player at row $super$, we then check if $A[super, i] = 0$ for $1 \leq i \leq n$ and $i \not= super$, and 
+        update $super$ to $i$ if the condition is satisfied.
+        We do so because we know that $super$ has beaten players in the rows $super+1$ to $i-1$ hence they
+        can't be super players. If $A[super, i] = 1$ we continue to inspect, until we find next player who has beaten 
+        $super$. Therefore, we have $\mathcal{O}(n)$ iterations. \\
+
+        Having identified a potential super player, we can verify if player at row $super$ is a super player in the 
+        second loop. If some column $m$, $A[super, m]=0$ then we return $\perp$, otherwise return 
+        player at row $super$. Similarly, we have $super-1$ iterations where the worst case is $super=n$ hence 
+        we have $\mathcal{O}(n)$ for the second loop. \\
+
+        overall, the program has $2\cdot\mathcal{O}(n)$ time complexity, and we can ignore the constant $2$ so the 
+        time complexity is $\mathcal{O}(n)$.
+
+    \end{customsolutionbox}
+\end{parts}
