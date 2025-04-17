@@ -1,0 +1,23 @@
+\textbf{StockPicking} \\
+We solved the Stock Picking problem in class, employing the divide-and-conquer technique to design a
+linear-time recursive algorithm. Design a simple linear-time algorithm for the same problem without
+using any recursion.
+
+\begin{customsolutionbox}
+    \begin{algorithm}[H]
+        \caption{StockPicking}
+        \SetAlgoLined
+        \SetKwFunction{FStockPicking}{StockPicking}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn{\FStockPicking{$A[1\ldots n]$}} {
+            $min \gets A[1]$ \\
+            $bestProfit \gets 0$\\
+            \For{$i \gets 2$ \KwTo $n$}{
+                $profit \gets A[i] - min$ \\
+                $bestProfit \gets \max(bestProfit, profit)$ \\
+                $min \gets \min(min, A[i])$
+            }
+            \KwRet $bestProfit$ \\
+        }
+    \end{algorithm}
+\end{customsolutionbox}

@@ -4,3 +4,6 @@
 .fab_latexmk
 .fls
 .out
+.synctex.gz
+.vscode
+.synctex.gz

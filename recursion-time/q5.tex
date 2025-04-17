@@ -1,0 +1,111 @@
+\textbf{Sperner} \\
+Given an $n > 1$ and an array $A[1 \ldots n]$ of $0s$ and $1s$ such that $A[1] \not= A[n]$, 
+a transition index is an index $1 \leq i \leq n-1$ such that $A[i] \not= A[i + 1]$ 
+(i.e., either $A[i] = 0$ and $A[i + 1] = 1$ or $A[i] = 1$ and $A[i + 1] = 0$).
+
+\begin{parts}
+    \part Prove that any such array has at least one transition index.
+        \begin{customsolutionbox}
+            % Let $P(n)$ be the predicate such $P(n)$ is true if for array $A[1\ldots n]$ consisting of $0s$ and $1s$, 
+            % with $A[i] \ne A[i+1]$ for $1 \leq i \leq n-1$, there exists a transition index $i$ such that $A[i] \not= A[i+1]$. We want to
+            % show that $\forall n \in \N: P(n)$ is true. We can use induction to prove this. \\
+ 
+            % \textbf{base case}: $n=2$, we have $A = [0, 1]$ or $A = [1, 0]$. In both cases,
+            % we have $A[1] \not= A[2]$ and $P(2)$ is true. \\
+
+            % \textbf{inductive case}: Fix $k\geq 2$, and for the inductive hypothesis assume $P(a)$ 
+            % is true for $2 \leq a \leq k$. Now we need to show that $P(k+1)$ is true that's for an 
+            % array $A[1, \ldots, k+1]$ there is a transition. \\
+
+            % Let $l = \lfloor\frac{k+1}{2}\rfloor$, and $A_1 = A[1, \ldots,l]$ and 
+            % $A_2 = A[l+1, \ldots, k+1]$. We see that $l \leq k$, and $l+1 \leq k$, therefore by the 
+            % inductive hypothesis there exists a transition index in arrays $A_1$ and $A_2$ hence $P(l)$ is true. 
+            % Given this, we can account for the following cases: \\
+
+            % \begin{parts}
+            %     \part $A_1$ or $A_2$ or both have a transition index hence $P(k+1)$ is true. 
+            %     \part \part If $A_1$ and $A_2$ consist entirely of different values (e.g., all 0s in $A_1$ and all 1s in $A_2$), 
+            %     then a transition occurs between $A[l]$ and $A[l+1]$. Since $A[l] \ne A[l+1]$, a transition index exists at position $l$.
+            %     \part Both $A[1]$ and $A[k+1]$ are composed of all $0s$ or all $1s$, but $A_1$ and $A_2$ have the same values. 
+            %     To have a transition index, we can flip the value of some index $i$ for $1 \leq i \leq l$ for $A_1$, and some index 
+            %     r $1 \leq r \leq l+1$ for $A_2$ to have $A[i] \not= A[i+1]$ and $A[r] \not= A[r+1]$.
+            % \end{parts}
+            Suppose for the sake of contradiction there is no transition index for all arrays $A[1, \ldots, n]$ of length $n$ 
+            for $n \geq 2$. This means there is no $i$ for $1 \leq i \leq n-1$ such that $A[i] \not= A[i+1]$, and
+            for all $i$ in the array, $A[i] = A[i+1]$. Now pick any erray $A[1, \ldots, n]$ of length $n$. We see that 
+            $A[1]=A[2]=A[3]= \ldots =A[n]$ hence $A[1] = A[n]$ which is a contradiction. Therefore, we conclude that there 
+            exists a transition index $i$ such that $A[i] \not= A[i+1]$ for all arrays $A[1, \ldots n]$ of 
+            length $n$ where $A[1] \ne A[n]$.
+        \end{customsolutionbox}
+
+    \part Design an algorithm to compute a transition index of such an array $A$.
+        \begin{customsolutionbox}
+            \begin{algorithm}[H]
+                \caption{FindTransitionIndex}
+                \SetAlgoLined
+                \SetKwFunction{FFindTransitionIndex}{FindTransitionIndex}
+                \SetKwProg{Fn}{Function}{:}{}
+                \Fn{\FFindTransitionIndex{$A, i, j$}}{
+                    \If{$j = i+1$, and $A[i] \ne A[j]$}{
+                        \KwRet $i$ 
+                    }
+                    $mid \gets \lfloor\frac{i+j}{2}\rfloor$ \\
+                    \If{$A[mid] = A[i]$} {
+                        \KwRet FindTransitionIndex($A, mid, j$) 
+                    }\Else {
+                        \KwRet FindTransitionIndex($A, i, mid$) 
+                    }
+                }
+            \end{algorithm}
+        \end{customsolutionbox}
+
+    \part Prove that your algorithm is correct
+    \begin{customsolutionbox}
+        Let $P(n)$ be the predicate that states: for any array $A[1, \ldots, n]$ of $0$s and $1$s such that 
+        $A[1] \ne A[n]$, there exists an index $1 \leq i \leq n - 1$ such that $A[i] \ne A[i+1]$. 
+        We aim to prove $P(n)$ holds for all $n \geq 2$ by strong induction. \\
+
+        \textbf{Base case:} $n = 2$. Since $A[1] \ne A[2]$, a transition occurs at index $1$, so $P(2)$ holds. \\
+
+        \textbf{Inductive step:} Fix $k \geq 2$, and assume $P(a)$ holds for all $2 \leq a \leq k$. 
+        We wish to show that $P(k+1)$ holds. Let $A[1, \ldots, k+1]$ be any array with $A[1] \ne A[k+1]$, and let 
+        $i = 1$, $j = k+1$, and $\text{mid} = \lfloor (i + j)/2 \rfloor$. Since $\text{mid} \leq k$, 
+        the inductive hypothesis guarantees a transition exists within any subarray of length $\leq k$ 
+        that satisfies the precondition. \\
+
+        The algorithm proceeds by comparing $A[\text{mid}]$ to $A[i]$:
+        \begin{parts}
+            \part If $A[\text{mid}] = A[i]$, then $A[\text{mid}] \ne A[j]$ by the assumption $A[i] \ne A[j]$. 
+            Therefore, a transition must occur in $A[\text{mid}, \ldots, j]$, and the algorithm recurses on that subarray.
+            
+            \part If $A[\text{mid}] \ne A[i]$, then a transition exists in $A[i, \ldots, \text{mid}]$, 
+            and the algorithm recurses on the left half.
+        \end{parts}
+
+        In both cases, the recursive call reduces the problem to a smaller subarray that satisfies 
+        the precondition and has length at most $k$, so the inductive hypothesis applies. Thus, $P(k+1)$ holds. \\
+
+        By the principle of strong induction, $P(n)$ is true for all $n \geq 2$.
+    \end{customsolutionbox}
+    
+    \part Compute the time complexity of your algorithm as a Big-O asymptotic.
+        \begin{customsolutionbox}
+            We see that the combine time of the algorithm is $O(1)$ because it is a single comparison, and we 
+            pick one half of the array to recurse  hence we the following recurrence relation for $T(n)$:
+            \[T(n) = T\left(\frac{n}{2}\right) + O(1)\] 
+            where  $a = 1$ and $b = 2$. We can see that the tree decays by $2^i$ at each level of the recursion, hence 
+            the number of levels of the tree is $k$ such that:
+            \[\frac{n}{2^k} = 1\]
+            \[k = \lg n\]
+            
+            By master theorem  we can see that the time complexity is:
+            \begin{align*}
+                f(n) &= O(1) \\
+                n^{\log_b a} &= n^{\log_2 1} = n^0  \hs \hs \hs \text{this fits into case 2 where $k=0$} \\
+                f(n) &= O(n^{\log_2 2^0} \lg^0 n)  = O(1)\\
+                T(n) &= \Theta(n^{\log_2 1} \lg^{0+1} n) \\
+                &= \Theta(n^0 \lg n) \\
+                &= \Theta(\lg n) \\
+            \end{align*}
+        \end{customsolutionbox}
+\end{parts}

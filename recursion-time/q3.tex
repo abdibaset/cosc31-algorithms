@@ -1,0 +1,109 @@
+\textbf{Local Minimum} \\
+Given an $n > 1$ and an array $A[1 \ldots n]$ of distinct integers, an index $2 \leq j \leq n-1$ is a \textit{local minimum}
+if $A[j] < A[j-1]$ and $A[j] < A[j+1]$. 1 is a local minimum if $A[1] < A[2]$, and $n$ is a local minimum
+if $A[n] < A[n-1]$.
+
+\begin{parts}
+    \part Design a recursive $O(\log n)$-time algorithm to find some local minimum.
+        \begin{customsolutionbox}
+            \begin{algorithm}[H]
+                \caption{FindLocalMinimum}
+                \SetAlgoLined
+                \SetKwFunction{FindLocalMinimum}{FindLocalMinimum}
+                \SetKwProg{Fn}{Function}{:}{}
+                
+                \Fn{\FindLocalMinimum{$A[1 \ldots n]$}}{
+                    \If{$A[1] < A[2]$}{
+                        \KwRet $1$ \tcp*{1 is a local minimum}
+                    }
+                    \If{$A[n] < A[n-1]$}{
+                        \KwRet $n$ \tcp*{n is a local minimum}
+                    }
+                    \KwRet \texttt{FindLocalMinimumHelper}($A, 1, n$) \\ \\
+                }
+
+                \SetKwFunction{FindLocalMinimumHelper}{FindLocalMinimumHelper}
+                \Fn{\FindLocalMinimumHelper{$A, i, j$}}{
+                    $mid \gets \lfloor\frac{i+j}{2}\rfloor$ \\
+                    \If{$A[mid] < A[mid-1]$ \textbf{and} $A[mid] < A[mid+1]$}{
+                        \KwRet $mid$ \tcp*{mid is a local minimum}
+                    }
+                    \If{$A[mid] > A[mid-1]$}{
+                        \KwRet \texttt{FindLocalMinimumHelper}($A, i, mid-1$)
+                    }
+                    \Else{
+                        \KwRet \texttt{FindLocalMinimumHelper}($A, mid+1, j$)
+                    }
+                }
+            \end{algorithm}            
+        \end{customsolutionbox}
+    \part  Give an argument of why your algorithm is correct and prove that it has $O(\log n)$ time complexity.
+        \begin{customsolutionbox}
+            Let $P(n)$ be the predicate such that $P(n)$ is true if for any array $A[1, \ldots, n]$ of distinct integers, 
+            an index $2 \leq j \leq n-1$ has a \textit{local minimum} such that $A[j] < A[j-1]$ and $A[j] < A[j+1]$.
+            We want to show that $\forall n \in \N: P(n)$ is true. We can use strong induction to prove this. \\
+          
+            \textbf{base case}: $n=2$, we first check the boundaries of the array that's indices $1$ and $n$. We see that we can 
+            have $A[1] < A[2]$, hence $P(2)$ is true. This check establishes that if boundaries have the local minimum we don't continue with the 
+            recursion. 
+            
+            \textbf{base case}: $n=3$.
+            The algorithm first checks if $A[1] < A[2]$ — if so, it returns index $1$ as a local minimum.  
+            Otherwise, it checks if $A[3] < A[2]$ — if so, it returns index $3$ as a local minimum.  
+            If neither of these conditions hold, then $A[2] < A[1]$ and $A[2] < A[3]$, which means index $2$ is a local minimum, 
+            and the recursive helper function will return it upon checking the midpoint, and this establishes that $P(3)$ is true. \\
+
+            \textbf{inductive case:} Fix $k \geq 3$, and assume the inductive hypothesis: for all $3 \leq a \leq k$, every array $A[1, \ldots, a]$ 
+            of distinct integers has at least one local minimum, and the algorithm finds it correctly.
+
+            Now consider an array $A[1, \ldots, k+1]$. Let $m = \lfloor \frac{i + j}{2} \rfloor$, where $i = 1$ and $j = k+1$. 
+            The algorithm first checks whether $A[m]$ is a local minimum:
+            \begin{itemize}
+                \item If $A[m] < A[m-1]$ and $A[m] < A[m+1]$, then $m$ is a local minimum, and the algorithm returns $m$.
+            \end{itemize}
+
+            Otherwise, we must have one of the following:
+            \begin{itemize}
+                \item \textbf{Case 1:} $A[m] > A[m - 1]$
+            
+                Since all elements are distinct, this implies that $A[m - 1] < A[m]$, so the value decreases as we move to the left.
+                Therefore, a local minimum must exist in the subarray $A[i, \ldots, m - 1]$.
+                We exclude $A[m]$ from the recursive call since it is not a local minimum. 
+                The algorithm recurses on this strictly smaller subarray of atmost size $k$, and by the inductive hypothesis, 
+                it will correctly return a local minimum.
+            
+                \item \textbf{Case 2, Else:} $A[m] < A[m - 1]$ 
+            
+                This implies that $A[m + 1] < A[m]$, so the value decreases as we move to the right.
+                A local minimum must therefore exist in the subarray $A[m + 1, \ldots, j]$.
+                Again, we exclude $A[m]$ from the recursive call for the same reason. The inductive hypothesis ensures the recursive call 
+                will correctly find a local minimum in this subarray.
+            \end{itemize}
+            
+
+            These two cases are mutually exclusive when $A[m]$ is not a local minimum. Therefore, 
+            the algorithm will always recurse into a valid subarray that contains a local minimum. Thus, it 
+            correctly returns a local minimum for input size $k+1$.
+
+            By strong induction, $P(n)$ is true for all $n \geq 2$, and the algorithm correctly finds a local 
+            minimum in any array $A[1 \ldots n]$ of distinct integers. \\
+
+            \textbf{time complexity}: We see that the combine time of the algorithm is $O(1)$ because it is a single comparison, and we 
+            pick one half of the array to recurse  hence we the following recurrence relation for $T(n)$:
+            \[T(n) = T\left(\frac{n}{2}\right) + O(1)\] 
+            where  $a = 1$ and $b = 2$. We can see that the tree decays by $2^i$ at each level of the recursion, hence 
+            the number of levels of the tree is $k$ such that:
+            \[\frac{n}{2^k} = 1\]
+            \[k = \lg n\]
+            
+            By master theorem  we can see that the time complexity is:
+            \begin{align*}
+                f(n) &= O(1) \\
+                n^{\log_b a} &= n^{\log_2 1} = n^0  \hs \hs \hs \text{this fits into case 2 where $k=0$} \\
+                f(n) &= O(n^{\log_2 2^0} \lg^0 n)  = O(1)\\
+                T(n) &= \Theta(n^{\log_2 1} \lg^{0+1} n) \\
+                &= \Theta(n^0 \lg n) \\
+                &= \Theta(\lg n) \\
+            \end{align*}
+        \end{customsolutionbox}
+\end{parts}

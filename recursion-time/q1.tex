@@ -1,0 +1,64 @@
+\textbf{Master Theorem} \\ 
+Use the Master theorem to solve the following recurrrences. Be sure to state which case of
+the master method applies and why. 
+\begin{parts}
+    \part \(T(n) = 16T(\frac{n}{4}) + n^2\)
+        \begin{customsolutionbox}
+            To verify master theorem applies, we compare $f(n) = n^2$ to $n^{\log_b a}$, where $a = 16 \geq 1$, 
+            and $ b = 4 > 1$
+            \begin{align*}
+                f(n) &= n^2 \\
+                n^{\log_b a} &= n^{\log_4 16} = n^{2} \\
+                f(n) &= \Theta(n^{\log_4 16} \lg^{k} n) \hs \hs \hs k = 0 \\
+                f(n) &= \Theta(n^{\log_4 16} \lg^{0} n) \\
+                &= \Theta(n^{\log_4 16}) \\
+                &= \Theta(n^{2}) \\
+            \end{align*}
+            This fits into case 2 where $k = 0$. Therefore, $T(n)$ is: 
+
+            \begin{align*}
+                T(n) &= \Theta(n^{\log_4 16} \lg^{0+1} n) \\
+                &= \Theta(n^{2} \lg n) \\
+            \end{align*}
+        \end{customsolutionbox}
+
+        \part \(T (m) = 7 T (\frac{m}{3}) + m^2\)
+            \begin{customsolutionbox}
+                $a =7, b = 3$
+                \begin{align*}
+                    f(m) &= m^2 \\
+                    m^{\log_3 7} &= m^{\log_3 7 + \epsilon}
+                \end{align*}
+                We see that $\log_3 7 < 2$, hence we have $\epsilon = 2 - \log_3 7$. Therefore, this fits into
+                case 3, and $f(m)$ is: 
+                \begin{align*}
+                    f(n) &= \Omega(m^{(\log_3 7) + \epsilon});  \hs \hs \hs \epsilon > 0\\
+                \end{align*}
+                Checking the regularity condition we have:
+                \begin{align*}
+                    7 \cdot f(\frac{m}{3}) &= 7 \cdot \left(\frac{m}{3}\right)^2 \\
+                    &= \frac{7}{9} m^2 \\
+                    &\leq c \cdot m^2
+                \end{align*}
+                The condition holds for $\frac{7}{9} < c < 1$, therefore we can find a $c$ that satifises the condition. $T(m)$ is:
+                \begin{align*}
+                    T(n) &= \Theta(m^2) \\
+                \end{align*}
+            \end{customsolutionbox}
+        \part \(T(n) = 2T(\frac{n}{4}) + \sqrt{n}\lg^2 n\)
+            \begin{customsolutionbox}
+                $a = 2, b = 4$
+                \begin{align*}
+                    f(n) &= \sqrt{n} \lg^2 n \\
+                    n^{\log_4 2} &= \sqrt{n} 
+                \end{align*}
+                This fits into case 2 where $k = 2$. Therefore, we have:
+
+                \begin{align*}
+                    f(n) &= \Theta(n^{\log_4 2} \lg^{2} n) \\
+                    T(n) &= \Theta(n^{\log_4 2} \lg^{2 + 1} n) \\
+                    &= \Theta(n^{\frac{1}{2}} \lg^{3} n) \\
+                    &= \Theta(\sqrt{n} \lg^{3} n)
+                \end{align*}
+            \end{customsolutionbox}
+\end{parts}
