@@ -1,0 +1,153 @@
+\textbf{Local Minimum 2-D}\\
+
+\begin{parts}
+    \part Clearly describe your algorithm. 
+        \begin{algorithm}[H]
+            \caption{Local Minimum in a 2-D Matrix}
+            \SetAlgoLined
+            \SetKwFunction{FFindLocalMinimaTwoDMatrix}{FindLocalMinimaTwoDMatrix}
+            \SetKwProg{Fn}{Function}{:}{}
+            \Fn{\FFindLocalMinimaTwoDMatrix{$G,\ n$}}{
+            
+                $mid \gets \left\lfloor \frac{n+1}{2} \right\rfloor$ \\
+                
+                Identify $\text{minVal}$ and its coordinates $(\text{minRow}, \text{minCol})$ among the middle row, middle column, and boundary edges.
+
+                \If{$\text{minVal}$ is smaller than all valid neighbors}{
+                    \KwRet $\text{minVal}$
+                }
+
+                Identify and cache valid neighbors of $\text{minVal}$ to be considered: \\
+                \quad \textbf{If minVal in middle column:} check left and right neighbors (if within bounds) \\
+                \quad \textbf{If minVal in middle row:} check top and bottom neighbors (if within bounds) \\
+                \quad \textbf{If on boundary:} \\
+                \quad\quad If in column 1: check right neighbor \\
+                \quad\quad If in column $n$: check left neighbor \\
+                \quad\quad If in row 1: check below \\
+                \quad\quad If in row $n$: check above \\
+            
+                \If{$\text{minVal}$ lies on the middle column, and is not a local minimum} {
+                    \If{left neighbor $<$ right neighbor}{
+                        \If{left neighbor is above middle row}{
+                            \KwRet \FFindLocalMinimaTwoDMatrix($G[1\ldots mid-1, 1 \ldots mid-1], mid-1$)
+                        }
+                        \ElseIf{left neighbor is below middle row}{
+                            \KwRet \FFindLocalMinimaTwoDMatrix($G[mid+1 \ldots n, 1 \ldots mid-1], mid-1$)
+                        }
+                    }
+                    \Else {
+                        \If{right neighbor is above middle row}{
+                            \KwRet \FFindLocalMinimaTwoDMatrix($G[1 \ldots mid-1, mid+1 \ldots n],\ mid-1$)
+                        }
+                        \ElseIf{right neighbor is below middle row}{
+                            \KwRet \FFindLocalMinimaTwoDMatrix($G[mid+1 \ldots n, mid+1 \ldots n],\ mid-1$)
+                        }
+                    }
+                }
+            
+                \ElseIf{$\text{minVal}$ lies on the middle row, and is not a local minimum} {
+                    \If{upper neighbor $<$ lower neighbor}{
+                        \If{upper neighbor is left of middle column}{
+                            \KwRet \FFindLocalMinimaTwoDMatrix($G[1 \ldots mid-1,\ 1 \ldots mid-1],\ mid-1$)
+                        }
+                        \ElseIf{upper neighbor is right of middle column}{
+                            \KwRet \FFindLocalMinimaTwoDMatrix($G[1 \ldots mid-1,\ mid+1 \ldots n],\ mid-1$)
+                        }
+                    }
+                    \Else {
+                        \If{lower neighbor is left of middle column}{
+                            \KwRet \FFindLocalMinimaTwoDMatrix($G[mid+1 \ldots n,\ 1 \ldots mid-1],\ mid-1$)
+                        }
+                        \ElseIf{lower neighbor is right of middle column}{
+                            \KwRet \FFindLocalMinimaTwoDMatrix($G[mid+1 \ldots n,\ mid+1 \ldots n],\ mid-1$)
+                        }
+                    }
+                }
+            
+                \ElseIf{$\text{minVal}$ lies on the boundary, and is not a local minimum} {
+                    Identify neighbor with minimum value. \\
+                    Recurse into the quadrant that contains that neighbor, \\
+                    and compute the correct submatrix size.
+                }
+
+            }
+            \end{algorithm}    
+    \part Rigorously prove the correctness of your algorithm.
+       \begin{customsolutionbox}
+            Let the predicate $P(n)$ be true if for any 2-D matrix $G[1 \ldots n,\ 1 \ldots n]$ of distinct integers, where $n \geq 1$, and such that
+            $G[i, j] = \infty$ for all $i \in \{0, n + 1\}$ or $j \in \{0, n + 1\}$,
+            there exists an index pair $(i, j)$ with $1 \leq i, j \leq n$ such that
+            $G[i, j] < G[i-1, j],\quad G[i, j] < G[i+1, j],\quad G[i, j] < G[i, j-1],\quad G[i, j] < G[i, j+1]$.
+            That is, $G[i,j]$ is strictly less than all four of its neighbors, including those that lie on the boundary of the matrix, 
+            which are defined to have value $\infty$. We will prove that $P(n)$ holds for all $n \in \mathbb{N}$ by strong induction. \\
+            
+            \textbf{Base case:} For $n = 1$, $G[1, 1]$ is bounded by $\infty$ on all sides, so it is trivially a local minimum. This establishes $P(1)$. \\
+            
+            \textbf{Inductive step:} Fix $k \geq 1$, and assume $P(a)$ holds for all $1 \leq a \leq k$. 
+            We want to prove that $P(k + 1)$ holds.
+            
+            Let $G'[1 \ldots k + 1,\ 1 \ldots k + 1]$ be any matrix of distinct integers, with boundary values 
+            $G'[i, j] = \infty$ for all $i \in \{0, k + 2\}$ or $j \in \{0, k + 2\}$. 
+            
+            The algorithm examines the middle row, middle column, and boundary edges to identify the global 
+            minimum among these. Let $\text{minVal}$ denote this minimum value. We consider the following cases:
+            
+            \begin{enumerate}
+                \item If $\text{minVal}$ is smaller than all its four neighbors, then it is a local minimum and is returned.
+                
+                \item If $\text{minVal}$ lies on the middle column and is not a local minimum, we compare its left and right neighbors. 
+                We recurse into the left half if the left neighbor is smaller, and into the right half otherwise.
+                
+                \item If $\text{minVal}$ lies on the middle row and is not a local minimum, we compare its top and bottom neighbors. 
+                We recurse into the upper half if the top neighbor is smaller, and into the lower half otherwise.
+                
+                \item If $\text{minVal}$ lies on the boundary and is not a local minimum, we compare its in-bounds neighbors and recurse 
+                into the quadrant that contains the neighbor with the smallest value.
+            \end{enumerate}
+            
+            In all cases, the submatrix we recurse into has size at most $\lfloor \frac{k + 1}{2}\rfloor by  \lfloor \frac{k + 1}{2}\rfloor$
+            where $\lfloor \frac{k + 1}{2}\rfloor\rfloor \leq k$. 
+            By the inductive hypothesis, the recursive call returns a local minimum within that submatrix. This local minimum is 
+            also valid in the original matrix because we recurse toward the smallest neighbor of $\text{minVal}$, 
+            and any neighbor outside the submatrix is either $\infty$ or was already compared when identifying the global minimum 
+            and found to be larger than the minVal, and consequently any value smaller than the minVal. 
+            Thus, the returned element is smaller than all four of its neighbors in $G'$. Therefore, $P(k + 1)$ holds. 
+            By strong induction, $P(n)$ holds for all $n \in \mathbb{N}$.
+
+            
+       \end{customsolutionbox}
+    \part State the algorithm\'s time complexity as a recurrence, and prove that the algorithm\'s time complexity is $O(n)$.
+       \begin{customsolutionbox}
+        The algorithm has a time complexity of $O(n)$. The combine time, $f(n)$, consideratios are $O(1)$ for the comparison of the potenial 
+        local minimum with its neighbors, and $O(n)$ for finding the minimum in the middle column for a given recursive call, hence $f(n) = O(n)$.
+
+        For each recursive call, we are decrementing the number of columns and rows of the matrix by half each, hence the recurrence relation, $T(n)$, is as 
+        follows:
+        \[T(n) = T(\frac{n}{2}) + O(n)\]
+
+        By masters theorem, we have:
+        \begin{align*}
+            f(n) &= O(n) \\
+            n^{\log_b a} &= n^{\log_2 2^0} = 1 \\ 
+        \end{align*}
+        We see that this fits into case 3, for $\epsilon = 1$:
+        \begin{align*}
+            f(n) &= \Omega({n^{\log_b a + 1}}) \\
+            &= \Omega({n^{\log_2 2^0 + 1}}) \\
+            &= \Omega({n}) \\
+        \end{align*}
+        Checking the regularity condition:
+        \begin{align*}
+            T(n) &\leq T(\frac{n}{2}) + cn \\
+            af\left(\frac{n}{b}\right) &\leq cf(n) \\
+            1 \cdot \frac{n}{2} &\leq cn
+        \end{align*}
+        For some $c$ where $\frac{1}{2} < c < 1$, the regularity condition is satisfied. Hence $T(n)$ is:
+        \begin{align*}
+            T(n) &= \Theta(f(n)) \\
+            &= \Theta(n) \\
+        \end{align*}
+        Since $T(n)$ is $\Theta(n)$, we can conclude that the algorithm runs in $O(n)$ time.
+       \end{customsolutionbox}
+
+\end{parts}

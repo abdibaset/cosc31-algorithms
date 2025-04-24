@@ -1,0 +1,116 @@
+Design by divide-and-conquer a $O(\lg m + \lg n)$-time algorithm that, given a positive integer $k$ and two
+sorted arrays a and b of size $m$ and $n$, returns the kth smallest element of the union of the two arrays.
+Answer the following:
+
+\begin{parts}
+    \part Design a divide-and-conquer algorithm by completing the pseudocode for the method below.
+    \begin{customsolutionbox}
+        \begin{algorithm}[H]
+            \caption{SelectFromTwoSortedArrays}
+            \SetAlgoLined 
+            \SetKwFunction{FSelectFromTwoSortedArrays}{SelectFromTwoSortedArrays}
+            \SetKwProg{Fn}{Function}{:}{}
+            \Fn{\FSelectFromTwoSortedArrays{$a, b, i, j, p, q, k$}}{
+                \If{$k \leq 0$}{
+                    \KwRet $\perp$
+                }
+                \If{$len(A) = 0$}{
+                    \KwRet $b[k]$
+                }
+                \If{$len(B) = 0$}{
+                    \KwRet $a[k]$
+                }
+                $a_{m} \gets \lfloor\frac{i + j}{2}\rfloor$ \\
+                $b_{m} \gets \lfloor\frac{p + q}{2}\rfloor$ \\
+        
+                $a_{\text{left}} \gets a_m - i + 1$ \\
+                $b_{\text{left}} \gets b_m - p + 1$ \\
+        
+                \If {$a_{\text{left}} + b_{\text{left}} < k$}{
+                    \If{$a[a_{m}] < b[b_{m}]$} {
+                        \KwRet \FSelectFromTwoSortedArrays{$a, b, a_{m} + 1, j, p, q, k - a_{\text{left}}$}
+                    } 
+                    \Else {
+                        \KwRet \FSelectFromTwoSortedArrays{$a, b, i, j, b_{m} + 1, q, k - b_{\text{left}}$}
+                    }
+                }
+                \ElseIf{ $a_{\text{left}} + b_{\text{left}} > k$}{
+                    \If{$a[a_{m}] < b[b_{m}]$} {
+                        \KwRet \FSelectFromTwoSortedArrays{$a, b, i, j, p, b_{m} - 1, k$}
+                    } 
+                    \Else {
+                        \KwRet \FSelectFromTwoSortedArrays{$a, b, i, a_{m} - 1, p, q, k$}
+                    }
+                }
+                \Else{
+                    \KwRet $\min(a[a_{m}], b[b_{m}])$
+                }
+            }
+        \end{algorithm}
+        \end{customsolutionbox}
+        
+        \part Argue the correctness of your algorithm. It is sufficient to state and justify the key observation
+        that your algorithm is based on
+        \begin{customsolutionbox}
+            The key observation is that the $k$th smallest element in the union of two sorted arrays can be found by 
+            comparing the middle elements of the current subarrays. At each step, we determine how many elements lie 
+            in the left halves of both arrays (up to their respective midpoints). 
+            
+            If the total number of elements in these left halves is less than $k$, then the $k$th smallest element 
+            must lie outside this region — specifically in the right half of one of the arrays. In this case, we discard 
+            the left half of the array with the smaller middle element and adjust $k$ accordingly. 
+            
+            On the other hand, if the total number of elements in the left halves is at least $k$, then the $k$th smallest 
+            element must lie within this region. We can safely discard the right half of the array with the larger middle 
+            element, without changing $k$.
+            
+            This divide-and-conquer process eliminates about half of the elements from consideration in each step, 
+            leading to a logarithmic number of recursive calls in the sizes of the arrays. The algorithm terminates 
+            once one of the arrays is empty or when the base case is met, returning the correct $k$th smallest element.
+        \end{customsolutionbox}
+            
+
+        \part Let $T(m, n)$ be the time complexity of your algorithm. State the recurrence for $T(m, n)$, where
+        $m$ and $n$ are as defined in the pre-condition.
+            \begin{customsolutionbox}
+                The algorithm either chops off half of the elements from one of the arrays so it is either $T(\frac{m}{2}, n)$ or 
+                $T(m, \frac{n}{2})$. The combine time is dominated by the comparison of the two middle elements, which is $O(1)$.
+                Hence, the recurrence relation is:
+                \begin{align*}
+                    T(m, n) &= \max\left(T\left(\frac{m}{2}, n\right), T\left(m, \frac{n}{2}\right)\right) + O(1) 
+                \end{align*}
+            \end{customsolutionbox}
+        
+        \part Prove by substitution that $T(m, n) = O(\lg m + \lg n)$.
+            \begin{customsolutionbox}
+                As shown above, we have the following recurrence relation:
+                \begin{align*}
+                    T(m, n) &= \max\left(T\left(\frac{m}{2}, n\right), T\left(m, \frac{n}{2}\right)\right) + O(1)
+                \end{align*}
+                We claims that the $T(m, n) = O(\log m + \log n)$, which can be written as: $T(m, n) \leq c \cdot(\log m + \log n)$ for some 
+                constant $c > 0, n_0 > 0, m_0 > 0$, and $\forall n> n_0$ and $\forall m > m_0$.
+
+                \textbf{Inductive hypothesis}: Assume that $T(a, b) \leq c \cdot (\log a + \log b)$ holds $\forall a < m$, and $\forall b < n$.\\
+                \textbf{Inductive case}: $T(m, n) \leq c(\log m + \log n)$.
+
+                Suppose we take $T(m/2, n)$ yields the max value, we know that 
+                \begin{align*}
+                    T\left(\frac{m}{2}, n\right) &\leq T\left(\frac{m}{2}, n\right) + d \\
+                    &= c \cdot (\log \frac{m}{2} + \log n) + d \\
+                    &= c \cdot (\log m - 1 + \log n) + d \\
+                    &= c \cdot (\log m + \log n) - c + d \\
+                \end{align*}
+                If we pick $c > d$, we see that $T(m, n) \leq c \cdot (\log m + \log n)$. Therefore, for $c > d, n_0 > 0, m_0 > 0$ 
+                and $\forall n> n_0$ and $\forall m > m_0$, we have: $T(m, n) = O(\log m + \log n)$
+
+                Otherwise, we can show that:
+                \begin{align*}
+                    T\left(m, \frac{n}{2}\right) &\leq T\left(m, \frac{n}{2}\right) + d \\
+                    &= c \cdot (\log m + \log \frac{n}{2}) + d \\
+                    &= c \cdot (\log m + \log n - 1) + d \\
+                    &= c \cdot (\log m + \log n) - c + d \\
+                \end{align*}
+                If we pick $c > d$, we see that $T(m, n) \leq c \cdot (\log m + \log n)$. Therefore, for $c > d, n_0 > 0, m_0 > 0$ 
+                and $\forall n> n_0$ and $\forall m > m_0$, we have: $T(m, n) = O(\log m + \log n)$
+            \end{customsolutionbox}
+\end{parts}
