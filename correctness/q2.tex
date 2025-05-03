@@ -1,0 +1,31 @@
+\textbf{Missing Number} \\
+Suppose that $a[1 \ldots n]$ contains all but one of the numbers in $\{1, 2,\ldots, n}$ and $\perp$, in some arbitrary
+order. Thus, exactly one number from $\{1, 2, \ldots, n\}$ is missing in $a[1 \ldots n]$ . For example, suppose that
+$n = 5$ and $a[1 \ldots 5]$ contains $(4, 5, 1, \perp, 3)$; then, the missing number is 2.
+
+\begin{customsolutionbox}
+    \begin{algorithm}[H]
+        \caption {MissingNumber }
+        \SetAlgoLined 
+        \underline{Precondition}: $n\geq 1$; $a[1\ldots n]$ is a permuation of $\{\perp, 1, 2, \ldots, n\} - m$, for some
+        $m \in \{1, 2, \ldots, n\}$ \\
+        \underline{Postcondition}: Terminates, and returns $m$, and the array $a$ is unchanged outside of the range $1 \ldots n$ \\
+        \SetKwFunction{FMissingNumber}{MissingNumber}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn{\FMissingNumber{$a, n$}}{
+            expectedSum $\gets \frac{n(n+1)}{2}$ \\ 
+            actualSum $\gets 0$ \\
+
+            \For{$i \gets 1$ \KwTo $n$}{
+                \If{$a[i] \neq \perp$}{
+                    actualSum $\gets$ actualSum + $a[i]$ 
+                }
+            }
+            \KwRet expectedSum - actualSum 
+        }
+    \end{algorithm}
+
+    \underline{Correctness}: The observation is that, there can only be one missing number from the array $a[1 \ldots n]$, hence
+    the difference between the sum of all numbers from $1 \ldots n$ and the sum of all numbers in the array $a$ expect for 
+    $\perp$ is the missing number. The algorithm runs in $O(2n) = O(n)$ to compute the two sums, and returns the difference. 
+\end{customsolutionbox}

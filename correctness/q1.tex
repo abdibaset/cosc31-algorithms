@@ -1,0 +1,105 @@
+\textbf{Merge Sort} \\
+\begin{parts}
+    \part State the pre-condition and the post-condition for the \textit{merge-sort-helper} method so that they
+    imply the correctness of the \textit{merge-sort} method.
+       \begin{customsolutionbox}
+        \begin{enumerate}
+            \item Preconditions: 
+                \begin{itemize}
+                    \item $\ell, r \in \N$
+                    \item $a[\ell \ldots r]$ is an array of real numbers 
+                \end{itemize}
+            \item Postconditions:terminates, and $a'[\ell \ldots r]$ is a sorted permutation of $a[\ell \ldots r]$.
+        \end{enumerate}
+       \end{customsolutionbox}
+    \part Write the loop invariant for the while-loop in the \textit{merge} method. The loop invariant you state
+    must be strong enough to imply the correctness of \textit{merge}.
+       \begin{customsolutionbox}
+            \begin{itemize}
+                \item $x \in [i,  j+1]$
+                \item $y \in [j+1,  k+1]$
+                \item Since $z-i = (x-i)+(y-(j+1)) =x+y-j-1$; 
+                \item $b[i\ldots  z-1] = b[i \ldots x+y-j-2]$ has a sorted permutation from $a[i\ldots x-1]$ and $a[j+1 \ldots y-1]$
+                \item Elements in $b[i \ldots z-1]$ are at most less or equal to the elements in $a[x \ldots j]$ and $a[y \ldots k]$.
+                \item Array $a$ remains unchanged outside of the range $i \ldots k$.
+            \end{itemize}
+       \end{customsolutionbox}
+    \part Prove by induction that your loop invariant is correct.
+       \begin{customsolutionbox}
+            \underline{Base case}: For the first iteration, $x = i$, and $y=j+1$. Then \[z = x+y-j-1 = i+j+1-j-1 = i\]
+            Since no elements have been merged yet, $b[i \ldots i-1]$ is empty array because the ranges $a[i \ldots i-1]$, 
+            and $a[j+1 \ldots j]$ are empty.
+
+            \underline{Inductive case}: For the inductive hypothesis, we assume
+            for $x=d$, $y=b$, and $z=c$, the following are true:
+            \begin{itemize}
+                \item $x \in [d, j+1]$
+                \item $y \in [b, k+1]$
+                \item $z = c$
+                \item $b[i\ldots c-1]$ is a sorted permutation from $a[i\ldots x-1]$ and $a[j+1 \ldots y-1]$
+                \item Elements in $b[i \ldots c-1]$ are at most less or equal to the elements in $a[d \ldots j]$ and $a[b \ldots k]$.
+                \item Array $a$ remains unchanged outside of the range $i \ldots k$.
+            \end{itemize}
+            
+            We prove that the loop invariant is true for one more iteration that's
+            either $x=d+1$, $y=b$, $z=c+1$ or $x=d$, $y=b+1$, $z=c+1$ because $x$ and $y$ are incremented alternatingly. 
+            Consider the cases:
+            
+            \begin{itemize}
+                \item \textbf{$a[d] \leq a[b]$}:
+                    \begin{itemize}
+                        \item $x = d+1$, we see that $d+1 \in [d, j+1]$, which is true by inductive hypothesis.
+                        \item $y=b$, we see that $b \in [b, k+1]$ is true by the inductive hypothesis.
+                        \item $b[i \ldots c+1-1] = b[i\ldots c]$. By the inductive hypothesis, $b[i \ldots c-1]$ is sorted permutation of elements in $a$, and
+                            $a[d]$ from subarray $a[d, j]$ is appended to the sorted array $b[i \ldots c-1]$. By inductive hypothesis, we 
+                            see that all elements in $a[d \ldots j]$ are greater than or equal to all the elements in $b[i \ldots c-1]$ hence 
+                            $b[i \ldots c]$ is sorted.
+                    \end{itemize}
+                \item {$a[d] > a[b]$}: we expect $x=d, y=b+1$, and $z=c+1$::
+                \begin{itemize}
+                    \item $x =d$,  we see that $d \in [d, j+1]$ which is true by the inductive hypothesis.
+                    \item $y=b+1$, we see that $b+1 \in [b, k+1]$, which is true by inductive hypothesis.
+                    \item Similarly, $b[i \ldots c+1-1] = b[i\ldots c]$. By the inductive hypothesis, $b[i \ldots c-1]$ is permutation of elements in $a$, and
+                            $a[b]$ from array $a[b, k]$ is appended to the sorted array $b[i \ldots c-1]$. By inductive hypothesis, we 
+                            see that all elements in $a[b \ldots k]$ are greater than or equal to all the elements in $b[i \ldots c-1]$ hence 
+                            $b[i \ldots c]$ is sorted.
+                \end{itemize}
+            \end{itemize}
+            In both cases, we see that $a$ is unchanged outside of the range $i \ldots k$, hence, we see that the loop invariant is 
+            true for $x = a+1$, $y=b$, and $z=c+1$ or $x=a$, $y=b+1$, and $z=c+1$.
+       \end{customsolutionbox}
+
+    \part Assuming that the \textit{merge} method is correct, prove by induction that the \textit{merge-sort-helper} method is correct
+       \begin{customsolutionbox}
+            Let $P(n)$ be predicate that is true if \textit{merge-sort-helper} meets the precondition, and postconditions in part (a). We
+            need to prove that $\forall n \in \N: P(n)$ is true. We can proceed by strong induction on the size of the subarray $s = r - l + 1$. \\
+
+            \underline{base case}: We see that if $s = 0$ or $s = 1$, the \textit{merge-sort-helper} terminates without an action. When $s=2$, we see
+            that $\ell < r$, and $a[\ell]$ and $a[r]$ are sorted by the merge method. Both the precondition, and the postconditions are satisified, and this establishes the base
+            case. \\
+
+            \underline{Inductive case}: Fix $k \geq 2$, and assume that $P(t)$ is true for $2 \leq t \leq k$, where $t$ corresponds to the size 
+            of the subarray $s$. We need to show that $P(k+1)$ is true. To that end, fix any array $m[\ell \ldots r]$ of size $k+1$, 
+            we see that $r > \ell$, and the method executes the recursive steps. Let $mid = \lfloor\frac{\ell+r}{2}\rfloor$. We have the subarrays 
+            $m[\ell \ldots mid]$, and $m[mid+1 \ldots r]$, whose size are exacty equal $mid$, and $mid \leq k$. 
+            By the inductive hypothesis, recursive calls to \textit{merge-sort-helper} on each of these subarrays correctly sort them.
+            Then the merge function is called. By the assumption, \textit{merge} correctly merges two sorted subarrays into one sorted array.
+            Thus, $m'[\ell \ldots r]$ is a sorted permutation of $m[\ell \ldots r]$. 
+            This establishes that $P(k+1)$ is true, and $\forall n \in \N: P(n)$ is true.
+       \end{customsolutionbox}
+
+    \part Write down the recurrence for merge sort with a (brief) explanation of how you get the recurrence,
+    and solve for the asymptotic time complexity of merge sort.
+       \begin{customsolutionbox}
+            The recurrence for the merge sort is $T(n) = 2T(\frac{n}{2}) + O(n)$, because we have two subproblems of size $\frac{n}{2}$ at node 
+            of the tree. The combine time is $O(n)$, because in the \textit{merge}, we are comparing the two sorted arrays, who combined size is at most $n$, 
+            and merging them and copying over to the original array to sort in place. \\
+
+            To solve the recurrence, we can use the master theorem. 
+            \begin{align*}
+                f(n) &= O(n) \\
+                n^{\log_2 2} &= n 
+            \end{align*}
+            We see that this fits into case 2, where $k=0$, hence we have $T(n) = \Theta(n \log n)$.
+       \end{customsolutionbox}
+\end{parts}
