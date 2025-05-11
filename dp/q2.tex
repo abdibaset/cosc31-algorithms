@@ -1,0 +1,92 @@
+\textbf{Printing} \\
+Consider the problem of neatly printing a paragraph with a monospaced font (all characters having the
+same width) on a printer. The input text is a sequence of n words of lengths $\ell_1, \ell_2, . . . , \ell_n$, measured
+in characters. We want to print this paragraph neatly on a number of lines that hold a maximum of
+$M$ characters each. Our criterion of “neatness” is as follows. If a given line contains words $i$ through
+$j$, where $i \leq j$ , and we leave exactly one space between words, the number of extra space characters
+$\ell_k$ , which must be nonnegative so that the words fit on the
+line. We wish to minimize the sum, over all lines except the last, of the cubes of the numbers of extra
+Design a dynamic programming algorithm of $O(n^2)$ time complexity and $O(n)$ space complexity that,
+given $n \geq 1$, $\ell[1 . . . n]$, and $M \geq 1$, prints neatly a paragraph of n words of lengths given by the $\ell$ array.
+
+\begin{customsolutionbox}
+    \underline{Clever observation}: 
+        For words up to index $i$, we consider all possible break points at index $j$ ($1 \leq j \leq i$), where words $j$ through $i$ would be placed on the current line. 
+        For each possible $j$, we compute the penalty of placing words $j$ to $i$ on one line (or $\infty$ if they do not fit). 
+        The dynamic programming step chooses the $j$ that minimizes the total cost up to $i$, which consists of the optimal cost up to $j-1$ plus the penalty for words $j$ to $i$. 
+        The corresponding $j$ is stored in $breakPoint(i)$ to allow reconstruction of the optimal paragraph.
+
+
+    \underline{Notation}: We we have the following:
+    \begin{itemize}
+        \item extraSpaces($j, i$) = $M - i+j - \sum_{r=j}^k \ell_r$
+        \item breakPoint($j$) - position with minimum penalty for printing words through some indices $j$ to $i$ for $1 \leq j \leq i \leq n$ 
+        \item penalty($j, i$)
+            \[
+                \text{penalty}(j, i) =
+                \begin{cases}
+                0, & \text{if } i = n \ (\text{last line has no penalty}) \\[8pt]
+                \left(\text{extraSpaces}(j, i)\right)^3, & \text{if } \text{extraSpaces}(j, i) \geq 0 \\[8pt]
+                \infty, & \text{if } \text{extraSpaces}(j, i) < 0
+                \end{cases}
+            \]
+        \item costs($j, i$) - minimizes the costs of printing a sequence of characters in a new line.
+    \end{itemize}
+
+    \begin{algorithm}[H]
+        \caption{PrintNeatly}
+        \underline{Preconditions}: $n \geq 1, M \leq 1$, $\ell[1 \ldots n]$ is array of real numbers representing lengths of words. \\
+        \underline{Postcondition}: Terminates, and prints the paragraph of $n$ words neatly \\
+        \SetKwFunction{FPrintNeatly}{PrintNeatly}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn{\FPrintNeatly($\ell[1 \ldots n], M$)}{
+            totalChars$[1] \gets \ell_1$ \\
+            \For{$i \gets 2$ \KwTo $n$} {
+                totalChars$[i] \gets$ totalChars[$i-1$] + $\ell[i]$
+            }
+            \vspace{1em}
+            penalty $\gets 0$ \\
+            breakPoints $\gets []$ \\
+            Initialize all costs[$1 \ldots n]$ with $\infty$ \\
+            \For{$i \gets 1$ \KwTo $n$}{
+                \For{$j \gets i$ \KwTo $1$}{
+                    charLength $\gets$ totalChars$[i]$ - totalChars[$j-1]$ \\
+                    spaces $\gets i - j$ \\
+                    extraSpaces $\gets M$ - charLength - spaces \\
+
+                    \If{extraSpaces $< 0$}{
+                        penalty $\gets \infty$
+                    }
+
+                    \If{$i = n$}{
+                        penalty $\gets 0$
+                    }
+                    \Else{
+                        penalty $\gets$ (extraSpaces)$^3$
+                    }
+
+                    \If{costs$[j-1] +$ penalty $<$ costs$[i]$}{
+                        costs$[i] \gets$ costs$[j-1] +$ penalty \\
+                        breakPoints$[i] \gets j$
+                    }
+                }
+            }
+            printParagraph($1, n$, breakPoints)
+        }
+        \vspace{2em}
+        \underline{Preconditions}: $\ell, n \in \N, \ell \leq n$, breakPoints$[\ell \ldots n]$ is array of real numbers, where $\ell$ is the print starting point \\
+        \underline{Postcondition}: Terminates, and prints the paragraph neatly \\
+        \SetKwFunction{FPrintParagraph}{PrintParagraph}
+        \Fn{\FPrintParagraph(start, $n$, breakPoints)}{
+            \If{ start $> n$}{ \KwRet }
+
+            endIndex $\gets$ breakPoints$[start]$ \\
+            prints words $start$ through $endIndex$ on line, then newline \\
+            \FPrintParagraph($endIndex+ 1, n, breakPoints$)
+        }
+    \end{algorithm}
+
+    \vspace{0.5em}
+    \underline{Time complexity}: We have $O(n^2) + O(n)$, hence the overall time complexity is $O(n^2)$ \\
+    \underline{Space complexity}: We have $O(3n)$ because of the 3 arrays to used hence $O(n)$ \\
+\end{customsolutionbox}

@@ -1,0 +1,96 @@
+\textbf{Submatrix} \\
+Let $A[1 \ldots n, 1 \ldots n]$ be an $n x n$ matrix. A submatrix of A is the matrix constituted by the elements
+of $A$ at $\{(i, j) |r \leq i \leq r', c \leq j \leq c'\}$, for any $r, r', c, c'$ such that $1 \leq r \leq r' \leq n$
+and $1 \leq c \leq c' \leq n$. We say this submatrix starts at $(r, c)$ and has a dimension of $r'-r + 1 \ldots c'
+-c + 1$. 
+
+Design a $O(n^2)$-time dynamic programming algorithm that, given $n > 0, 0 < k \leq n$, and a matrix
+$A[1 \ldots n, 1 \ldots n]$ of numbers, finds out a submatrix of A of dimension $k x k$ whose sum of elements is
+a maximum. Your algorithm should return the sum of the elements of the submatrix and where the
+submatrix starts.
+
+\begin{customsolutionbox}
+    \underline{Clever observation}: 
+        The number of valid positions to place a $k \times k$ submatrix is $(n - k + 1)$ for both rows and columns. 
+        To compute the sum of any $k \times k$ submatrix efficiently without recomputing overlapping elements,
+        we precompute a 2D prefix sum matrix $S$, where $S[i][j]$ stores the sum of elements in the rectangle from $(1, 1)$ to $(i, j)$. 
+
+        Using this prefix sum matrix, the sum of any $k \times k$ submatrix starting at $(r, c)$ can be computed in $O(1)$ time 
+        using inclusion-exclusion, allowing us to check all possible positions in $O(n^2)$ time overall.
+
+    \underline{Notation}:
+
+        \begin{itemize}
+            \item $P(i, j)$: Prefix sum of matrix $A$, defined as:
+        
+            \[
+            P(i, j) =
+            \begin{cases}
+            \sum_{1 \leq x \leq i, 1 \leq y \leq j} A[x, y], & \text{if } i \leq n \text{ and } j \leq n \\[8pt]
+            0, & \text{otherwise}
+            \end{cases}
+            \]
+        
+            \item $M(n, k)$: Maximum sum of any $k \times k$ submatrix, defined as:
+        
+            \[
+            M(n, k) = 
+            \max_{\substack{1 \leq i \leq n-k+1 \\ 1 \leq j \leq n-k+1}} 
+            \Big( 
+            P(i+k-1, j+k-1) 
+            - P(i-1, j+k-1) 
+            - P(i+k-1, j-1) 
+            + P(i-1, j-1) 
+            \Big)
+            \]
+
+        
+            \item $(i^*, j^*)$: The starting coordinates of the submatrix that achieves $M(n, k)$.
+        \end{itemize}
+        
+
+    \begin{algorithm}[H]
+        \caption{SubmatrixMaxSum}
+        \underline{Preconditions}: $n, k \in \N, n \geq 1, 0<k\leq n$, $A[1\ldots n, 1 \ldots]$ is an $n x n$ matrix 
+        with integers.\\
+        \underline{Postcondition}: Terminates, and returns the sum elememts of submatrix with max sum, and where the 
+        submatrix starts \\
+        \SetKwFunction{FSubmatrixMaxSum}{SubmatrixMaxSum}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn{\FSubmatrixMaxSum($A[1 \ldots n 1\ldots n], k$)}{
+            Initialize matrix $S[1 \ldots n \ldots n]$ with all zeros \\
+            
+            \text{// row prefix sum} \\
+            \For{$i \gets n$ \KwTo $1$}{
+                \For{$j \gets n$ \KwTo $1$}{
+                    $S[i, j] = S[i, j+1] +  A[i, j]$
+                }
+            }
+
+            \text{// column prefix sum} \\
+            \For{$j \gets n$ \KwTo $1$}{
+                \For{$i \gets n$ \KwTo $1$}{
+                    $S[i, j] = S[i+1, j] +  S[i, j]$
+                }
+            }
+
+            maxSum $\gets -\infty$ \\
+            maxRow $\gets 0$, maxCol $\gets 0$ \\
+
+            \For{$i \gets 1$ \KwTo $n-k+1$}{
+                \For{$j \gets 1$ \KwTo $n-k+1$}{
+                    currSum $\gets S[i+k-1, j+k-1] - S[i-1, j+k-1] - S[i+k-1, j-1] + S[i-1, j-1]$ \\
+                    \If{currSum > maxSum}{
+                        maxSum $\gets$ currSum \\
+                        maxRow $\gets i$ \\
+                        maxCol $\gets j$
+                    }
+                }
+            }
+            \KwRet maxSum, maxRow, maxCol 
+        }
+    \end{algorithm}
+
+    \underline{Time complexity}: $O(n^2)$ because of the nested loops \\
+    \underline{Space complexity}: $O(n^2)$ because of 2D matrix $s$ that prefixes the sum.
+\end{customsolutionbox}

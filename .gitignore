@@ -1,9 +1,9 @@
 .DS_Store 
-.log
-.aux
-.fab_latexmk
-.fls
-.out
-.synctex.gz
+*.log
+*.aux
+*.fab_latexmk
+*.fls
+*.out
+*.synctex.gz
 .vscode
-.synctex.gz
+*.synctex.gz

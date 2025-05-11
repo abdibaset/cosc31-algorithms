@@ -1,0 +1,84 @@
+\textbf{Bigdonald's} \\
+Bigdonald's is considering opening a series of restaurants along Deep Valley Highway (DVH). The n
+possible locations are along a straight line and their distances from the start of DVH, in miles and in
+increasing order, are $m[1], m[2], \ldots, m[n]$. The constraints are as follows:
+\begin{itemize}
+    \item At each location, Bigdonald’s may open at most one restaurant. The expected profit from opening
+    a restaurant at location $i$ is $p[i]$, where $p[i] > 0$ and $i \in \{1, 2, \ldots, n\}$.
+    \item Any two restaurants should be at least $k$ miles apart, where $k$ is a positive integer.
+\end{itemize}
+Design a dynamic programming algorithm of $O(n)$ time complexity and $O(n)$ space complexity that,
+given $k, n, m[1 \ldots n]$, and $p[1 \ldots n]$, outputs the maximum expected total profit (subject to the given
+constraints) and the locations where to open the restaurants to realize this maximum expected total
+profit. Analyze the time and space complexity of your algorithm.
+
+\begin{customsolutionbox}
+    \underline{\textbf{Observations}}: Let $mp$ represent the maximum profit. We observe that:
+    \begin{itemize}
+        \item The maximum profit at index $i$ is either the maximum profit at $i-1$ or the sum of $p[i]$ and the maximum profit at the latest valid index $j$ 
+        before $i$ such that $m[i] - m[j] \geq k$ for $1 \leq j < i \leq n$. The valid index $j$ must be the largest index satisfying this condition, with no other index $r$ for
+        $j < r < i$ such that $m[i] - m[r] \geq k$.
+        \item These valid indices can be precomputed efficiently using a linear two-pointer scan, which allows us to define a function $validIndex$ giving the valid $j$ for each $i$.
+    \end{itemize}
+
+    \underline{\textbf{Notations}}: To implement the above idea, we define:
+    \begin{itemize}
+        \item $validIndex[i]$: the largest index $j$ such that $j < i$ and $m[i] - m[j] \geq k$.
+        \item $mp(i)$: the maximum profit achievable considering locations $1$ through $i$.
+    \end{itemize}
+
+    \underline{\textbf{Recurrence}}: The maximum profit at index $i$ can be computed as:
+    \[
+    mp[i] = \max(mp[i-1],\ p[i] + mp[validIndex[i]])
+    \]
+
+    \begin{algorithm}[H]
+        \caption{Bigdonald's} 
+        \underline{\textbf{Preconditions}}: $n \geq 1$, $k \geq 1$, $m[1 \ldots n]$ is an array of possible locations 
+        of restaurants from the start of DVH in miles, where $m[i] < m[i+1]$ for $1 \leq i \leq n$, $k$ is a positive 
+        integer of the minimum distance between two restaurants, and $p[1 \ldots n]$ is an array of expected profit from opening a restaurant at
+        location $i$, where $p[i] > 0$ for $1 \leq i \leq n$. \\
+        \underline{\textbf{Postconditions}}: Terminates, and returns the maximum expected total profit and the locations to open restaurants for 
+        maximum expected total profit. \\ \\
+        \SetAlgoLined
+        \SetKwFunction{FMaxProfitAndLocations}{Bigdonald}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn{\FMaxProfitAndLocations{$m[1 \ldots n], p[1 \ldots n], k$}}{
+            set validIndex[$i$] to $-1$ for $1 \leq i \leq n$ \\
+            set mp[$i$] to $0$ for $s1 \leq i \leq n$ \\
+            define a list of $locations \gets [ ]$ \\
+            slowPtr $\gets 1$ \\
+            fastPtr $\gets 2$ \\
+            \vspace{0.05em}
+
+            \While{$fastPtr < n$}{
+                \While{$slowPtr < fastPtr$ \textbf{and} m[fastPtr] - m[slowPtr] $\geq k$}{
+                    slowPtr $\gets$ slowPtr + 1 
+                    
+                }
+                validIndex[fastPtr] $\gets$ slowPtr - 1 \\
+                fastPtr $\gets$ fastPtr + 1 
+            }
+
+            \vspace{1em}
+
+            % \tcp*[l]{compute max profit}
+            mp$[1] \gets p[1]$ \\
+            append $1$ to $locations$ \\
+            \For{$i \gets 2$ \KwTo $n$} {
+                mp[$i$] = $\max(mp[i-1], p[i] + mp[validIndex[i]])$ \\
+                \If{$mp[i] > mp[i-1]$} {
+                    append $i$ to $locations$
+                }
+            }
+
+            \KwRet {$(mp[n], locations)$}
+        }
+    \end{algorithm}
+
+    \underline{Time complexity}: The total time complexity is $O(2n) = O(n)$. In the first loop, 
+    since the slow pointer only moves forward and is not reset, the inner while loop runs in constant time per iteration of the outer loop. 
+    The second loop takes exactly $O(n)$ \\
+    \underline{Space complexity}: The space complexity is $O(3n) = O(n)$, we are using 3 arrays for which each 
+    can have at most $n$ elements.
+\end{customsolutionbox}

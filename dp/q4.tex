@@ -1,0 +1,97 @@
+\textbf{Majority} \\
+Given an array $A[1 \ldots n]$ $(n \geq 1)$ of numbers, a majority element is a number M such that more than
+half the entries of the array $A$ are equal to $M$ . For example, in the array $[2, 3, 2, 2, 4,-1, 2], M = 2$ is
+a majority element. Notice that some arrays do not have a majority element, e.g., $[1, 2, 3, 2]$.
+In this problem, you will give a linear time iterative algorithm, $Majority(A[1 \ldots n])$ that outputs a
+number $m$, which is guaranteed to be the majority element of $A$ if $A$ has a majority element. \\
+
+In this problem, you will give a linear time iterative algorithm, $Majority(A[1 \ldots n])$ that outputs a
+number $m$, which is guaranteed to be the majority element of $A$ if A has a majority element.
+
+\begin{parts}
+    \part Specify the formal precondition and postcondition for the $Majority(A[1 \ldots n])$ function.
+        \begin{customsolutionbox}
+            \underline{Preconditions}: $n \geq 1$, and $A[1 \ldots n]$ is an array of integers \\
+            \underline{Post condition}: Terminates, and returns a number $m$ if $A$ has a majority element, otherwise 
+            returns $\perp$, $A[1 \ldots n]$remains unchanged within its bound 1 through n
+        \end{customsolutionbox}
+    \part Give a linear time iterative algorithm for $Majority(A[1 \ldots n])$
+        \begin{customsolutionbox}
+            \begin{algorithm}[H]
+                \caption{Majority Element}
+                \SetAlgoLined
+                \SetKwFunction{FMajorityElement}{MajorityElement}
+                \SetKwProg{Fn}{Function}{:}{}
+                \Fn{\FMajorityElement{$A[1 \ldots n]$}} {
+                    $m \gets 0$ \\
+                    $votes \gets 0$ \\
+                    \For{$i \gets 1$ \KwTo $n$}{
+                        \If{$votes = 0$}{ 
+                            $votes \gets votes + 1$ \\
+                            $m \gets A[i]$
+                        }
+                        \ElseIf{$m = A[i]$} {$votes \gets votes + 1$}
+                        \Else { $votes \gets votes - 1$}
+                    }
+                }
+                \vspace{1em}
+
+                $mCount \gets 0$ \\
+                \For{$i \gets 1$ \KwTo $n$}{
+                    \If{$A[i] = m$} { $mCount \gets mCount + 1$}
+                    \If{$mCount > \lfloor\frac{n}{2}\rfloor$} { \KwRet $m$}
+                }
+                \KwRet $\perp$
+            \end{algorithm}
+        \end{customsolutionbox}
+
+    \part  Prove the correctness of your algorithm using a loop-invariant.
+    \begin{customsolutionbox}
+        In both loops, we maintain the following invariants. Throughout, $i \in [1, n+1]$ and $A[1 \ldots n]$ is unchanged.
+        
+        \underline{Loop 1 Invariants (Majority Candidate Identification)}:
+        \begin{itemize}
+            \item If $votes = 0$, there is no current candidate for majority element in $A[1 \ldots i-1]$.
+            
+            \item If $votes > 0$, let $x$ be the true majority element (if one exists):
+            \begin{itemize}
+                \item If $m = x$, then $m$ is the candidate for majority element in $A[1 \ldots i-1]$.
+                \item If $m \ne x$, then $m$ becomes the candidate for majority element in $A[1 \ldots i-1]$ because:
+        
+                \[
+                votes > \frac{i-1}{2}
+                \]
+        
+                which means $m$ appears more than half the time in $A[1 \ldots i-1]$. Therefore, no other element, including $x$, can be majority in $A[1 \ldots i-1]$.
+            \end{itemize}
+        \end{itemize}
+        
+        \underline{Loop 1 Proof}:
+        \begin{itemize}
+            \item \textbf{Base case} ($i = 1$): $votes = 0$, so there is no candidate $m$. Invariant holds.
+            \item \textbf{Inductive step}: Assume invariant holds for $i$. For $i' = i + 1$, consider:
+            \begin{itemize}
+                \item \textbf{Case 1}: $votes = 0$: Assign $m \gets A[i']$ and $votes \gets 1$. $m$ becomes new candidate.
+                \item \textbf{Case 2}: $votes > 0$ and $A[i'] = m$: Increment $votes$. $m$ remains candidate.
+                \item \textbf{Case 3}: If $votes > 0$ and $A[i'] \ne m$, decrement $votes$. If this makes $votes = 0$, the current candidate $m$ is discarded and a new element is selected in the
+                next iteration. This satisfies the invariant condition for $votes = 0$: no current candidate is held until the algorithm selects a 
+                new candidate when processing the next element.
+            \end{itemize}
+        \end{itemize}
+        
+        \vspace{1em}
+        
+        \underline{Loop 2 Invariant (Verification)}:
+        \begin{itemize}
+            \item At any point during the second loop, $mCount \leq \lfloor \frac{n}{2} \rfloor$ until $m$ is confirmed as majority.
+        \end{itemize}
+        
+        \underline{Loop 2 Proof}:
+        \begin{itemize}
+            \item \textbf{Base case} ($i = 1$): Initially, $mCount = 0 \leq \lfloor \frac{n}{2} \rfloor$.
+            \item \textbf{Inductive step}: As $i$ increases, $mCount$ increments only when $A[i] = m$. Once $mCount$ exceeds $\lfloor \frac{n}{2} \rfloor$, $m$ is returned. 
+            Otherwise, if the loop finishes without this condition, $\perp$ is returned.
+        \end{itemize}
+        \end{customsolutionbox}
+        
+\end{parts}

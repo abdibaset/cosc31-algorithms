@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1746063724.66376 "/Users/ab/Desktop/git-projects/cosc31-algorithms/correctness/hw4.tex" "hw4.pdf" "hw4" 1746063725.76712 2
+["pdflatex"] 1746581937.66818 "/Users/ab/Desktop/git-projects/cosc31-algorithms/correctness/hw4.tex" "hw4.pdf" "hw4" 1746581938.79539 2
   "../common.tex" 1745456498.21413 4587 12ea5ca605699779711795606760d210 ""
   "/Users/ab/Desktop/git-projects/cosc31-algorithms/correctness/hw4.tex" 1746063724.44942 248 1d37b260508de13667cfeab98ba595ce ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
@@ -214,8 +214,8 @@
   "/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1711097242.2414 5467645 128b85b7cde5f5edc5cb7f1dd7ff8736 ""
   "/usr/local/texlive/2024/texmf-var/web2c/pdftex/pdflatex.fmt" 1711097165 8221436 287ab7e1a90e23aa69752a6d4699d8ff ""
   "/usr/local/texlive/2024/texmf.cnf" 1710266656 577 e590dabc9e28c5b61546e15f63eebcdf ""
-  "hw4.aux" 1746063725.67365 1158 a46d550f39f3cbd4d0e7ed639cfd9889 "pdflatex"
-  "hw4.out" 1746063725.42725 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "hw4.aux" 1746581938.68564 1158 a46d550f39f3cbd4d0e7ed639cfd9889 "pdflatex"
+  "hw4.out" 1746581938.43012 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
   "hw4.tex" 1746063724.44942 248 1d37b260508de13667cfeab98ba595ce ""
   "q1.tex" 1746063574.75289 7475 f011d74eb6f12a7c2b6cdac25ea7c0f5 ""
   "q2.tex" 1746063685.4512 1623 906952cbc83b9d4ddb4c94f963d65b83 ""
