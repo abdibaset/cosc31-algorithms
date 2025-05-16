@@ -1,0 +1,80 @@
+\textbf{Lodging} \\
+Suppose we have $n \geq 1$ rooms $r[1 \ldots n]$, and $m \geq 1$ groups $g[1 \ldots m]$. Each room $r[i]$ has a distinct ID
+$r[i].id$ and a capacity $r[i].cap$, which is the maximum number of people that the room accommodates.
+Each group g[i] has a distinct ID $g[i].id$ and a size $g[i].size$, which is the number of people in that group.
+We want to assign groups to rooms so that each group is assigned to at most one room, at most one
+group is assigned to each room, and if a group $g[i]$ is assigned to room $r[j]$, then $g[i].size \leq r[j].cap$.
+Thus, an assignment A is a set of pairs $(g, r)$, where g is a group, $r$ is a room, and the following conditions
+are satisfied: (i) If $(g, r)$ and $(g', r)$ are distinct pairs in A, then $g.id  \ne g'.id$ and $r.id  \ne r'.id$; and (ii)
+If $(g, r) \in A$, then $g.size \leq r.cap$.\\
+
+Notice that if there are fewer rooms than groups or if rooms are not big enough, not all groups can be
+assigned rooms. Similarly, if there are too many rooms, some rooms might go empty (i.e., no groups
+are assigned to these rooms). \\
+
+The merit of an assignment is the sum of the sizes of the groups that are assigned rooms. Give a
+greedy algorithm that prints an assignment of maximum merit. Be sure to rigorously state and prove
+the Greedy Choice Lemma that your algorithm is based on. State the time and space complexity of
+your algorithm
+
+\begin{customsolutionbox}
+    \underline{\textbf{Greedy choice lemma}}: Given a set of rooms $R = \{r_1, r_2, \ldots, r_n\}$ and a set of groups $G = \{g_1, g_2, \ldots, g_m\}$, let 
+    $g^* \in G$ be the largest unassigned group (i.e., with the maximum size), and let $r^* \in R$ be the largest available room such that 
+    $g^*.size \leq r^*.cap$. Then there exists an optimal assignment in which the pair $(g^*, r^*)$ is included, and for some room $r' \leq r^*$, we can find 
+    an optimal assignment $(g', r')$ where $g' \leq g^*$. 
+
+    \begin{proof}
+        Let $S$ be the largest set with the maximum merit. Consider the following cases:
+        \begin{parts}
+            \part If $(g^*, r^*) \notin S$, then we can define $S' = S \cup \{(g^*, r^*)\}$, yielding $|S'| > |S|$. This contradicts that $S$ is the largest set with the maximum possible merit,
+            and $S'$ os the largest possible set with maximum merit.
+    
+            \part Suppose $(g', r^*) \in S$ and $(g^*, r^*) \notin S$. Since $g^*.size \leq r^*.cap$ by assumption, we can define 
+            \[
+            S' = \left(S \setminus \{(g', r^*)\}\right) \cup \{(g^*, r^*)\}
+            \]
+            where $|S'| = |S|$. Therefore, $S'$ is also a largest set with maximum merit.
+    
+            \part Suppose $(g^*, r') \in S$ and $(g^*, r^*) \notin S$. Since $r^* \leq r'$ in capacity, we can define 
+            \[
+            S' = \left(S \setminus \{(g^*, r')\}\right) \cup \{(g^*, r^*)\}
+            \]
+            where $|S'| = |S|$. Therefore, $S'$ is also a largest set with maximum merit.
+    
+            \part Suppose we have the pairs $(g', r^*)$ and $(g^*, r')$ in $S$. Then we can create the pairs $(g^*, r^*)$ and $(g', r')$, and define
+            \[
+            S' = \left(S \setminus \{(g', r^*), (g^*, r')\}\right) \cup \{(g^*, r^*), (g', r')\}
+            \]
+            so that $|S'| = |S|$. Thus, $S'$ is also a largest set with maximum merit.
+        \end{parts}
+    \end{proof}
+    
+
+    \begin{algorithm}[H]
+        \caption{LodgingProblem}
+        \SetKwFunction{FMaximumMerit}{MaximumMerit}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn{\FMaximumMerit($r[1 \ldots n], g[1 \ldots m]$)}{
+            Sort $r[1 \ldots n]$ descending by $r[i].cap$ \\
+            Sort $g[1 \ldots m]$ descending by $g[i].size$ \\
+            $ptr \gets 1$ \tcp*{Pointer to next unassigned group}
+            maxMerit $\gets 0$ \\
+    
+            \For{$i \gets 1$ \KwTo $n$}{
+                \While{$ptr \leq m$ \textbf{and} ($g[ptr].size >  r[i].cap$)}{
+                    ptr++
+                }   
+                \If{$ptr \leq m$}{
+                    maxMerit $\gets$ maxMerit g[ptr].size \\
+                    ptr++
+                }   
+            }
+    
+            \KwRet maxMerit
+        }
+    \end{algorithm}
+    
+
+    \underline{Time complexity}: $O(n log n + m log m)$ \\
+    \underline{Space complexity}: $O(n+m)$
+\end{customsolutionbox}

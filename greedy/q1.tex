@@ -1,0 +1,93 @@
+\textbf{Activity Selection Revisted} \\
+Not just any greedy approach to the activity-selection problem produces a maximum-size set of non-
+overlapping set of activities. \\
+\textbf{\underline{Note}}: In all the cases below, the most optimal MNOS is found by picking event with the earliest finish time. 
+\begin{parts}
+    \part Give a concrete counterexample to show that the approach of selecting the activity of least dura-
+    tion from among those that are compatible with previously selected activities does not work.
+        \begin{customsolutionbox}
+            Suppose we have 3 events $e_1, e_2, e_3$, each with an id, start and finish time encoded as $e_i.id, e_i.s, e_i.f$ for $1 \leq i \leq 3$. The start and finish times are 
+            $e_1 = [1, 10], e_2 = [7, 12], e_3 = [11, 20]$.$e_2$ has the shortest duration and overlaps with the events $e_1$ and $e_3$. We also see that $e_1$ and $e_3$ don't overlap. \\
+
+            By choosing the event with the shortest duration as our greedy choice lemma, we see that $MNOS = \{e_2\}$, and $MNOS = |\{e_2\}| =1$.
+            However, we have most optimal MNOS as $ |\{e_1, e_3\}| =2$ since they are disjoint. \\ 
+
+            \noindent\textbf{Visualization of Events:}
+
+            \begin{tikzpicture}[x=0.5cm, y=1cm]
+            % Time axis
+            \draw[->] (0,0) -- (22,0) node[right] {Time};
+
+            % Event bars and labels
+            \draw[thick] (1,3) -- (10,3);   \node[left] at (0.5,3) {$e_1$};
+            \draw[thick] (7,2) -- (12,2);   \node[left] at (0.5,2) {$e_2$};
+            \draw[thick] (11,1) -- (20,1);  \node[left] at (0.5,1) {$e_3$};
+
+            % Optional time ticks
+            \foreach \x in {0,2,...,20} {
+                \draw (\x,0.1) -- (\x,-0.1) node[below] {\tiny \x};
+            }
+            \end{tikzpicture}
+        \end{customsolutionbox}
+    
+    \part Give a concrete counterexample to show that the approach of always selecting the compatible
+    activity that overlaps the fewest other remaining activities does not work.
+        \begin{customsolutionbox}
+            Suppose we have 4 events $e \{e_1, e_2, e_3, \ldots, e_9\}$, we have 
+            \begin{itemize}
+                \item $e_1 = [1, 4]$
+                \item $e_2 = [5, 8]$
+                \item $e_3 = [9, 12]$
+                \item $e_4 = [13, 16]$
+                \item $e_5 = [7, 10]$
+                \item $e_6 = [3, 6]$
+                \item $e_7 = [3, 6]$
+                \item $e_8 = [11, 14]$
+                \item $e_9 = [11, 14]$
+            \end{itemize}
+
+            \begin{tikzpicture}[x=0.4cm, y=0.8cm]
+            \draw[->] (0,0) -- (21,0) node[right] {Time};
+
+            % Events
+            \draw[thick] (1,1) -- (4,1);   \node[left] at (0.5,1) {$e_1$};
+            \draw[thick] (5,2) -- (8,2);   \node[left] at (0.5,2) {$e_2$};
+            \draw[thick] (9,3) -- (12,3);  \node[left] at (0.5,3) {$e_3$};
+            \draw[thick] (13,4) -- (16,4); \node[left] at (0.5,4) {$e_4$};
+
+            \draw[thick] (7,5) -- (10,5);  \node[left] at (0.5,5) {$e_5$};
+
+            \draw[thick] (3,6) -- (6,6);   \node[left] at (0.5,6) {$e_6$};
+            \draw[thick] (3,7) -- (6,7);   \node[left] at (0.5,7) {$e_7$};
+
+            \draw[thick] (11,8) -- (14,8); \node[left] at (0.5,8) {$e_8$};
+            \draw[thick] (11,9) -- (14,9); \node[left] at (0.5,9) {$e_9$};
+
+            % Time ticks (optional)
+            \foreach \x in {0,2,...,20} {
+                \draw (\x,0.1) -- (\x,-0.1) node[below] {\tiny \x};
+            }
+
+            \end{tikzpicture} \\
+            \noindent
+            By the greedy lemma that selects the activity that overlaps the fewest other remaining activities, we might choose $e_5 = [7, 10]$ first. However, this blocks both $e_2 = [5, 8]$ and $e_3 = [9, 12]$. Then we can only pick $e_1 = [1, 4]$ before it, and $e_4 = [13, 16]$ after it, giving us $MNOS = |\{e_1, e_4, e_5\}| = 3$.
+
+            But the optimal solution is to pick $\{e_1 = [1,4], e_2 = [5,8], e_3 = [9,12], e_4 = [13,16]\}$, which are all compatible and yield $MNOS = 4$.
+
+            Thus, choosing the compatible activity that overlaps the fewest other activities does not always yield a maximum-size set.
+
+        \end{customsolutionbox}
+    
+    \part  Give a concrete counterexample to show that the approach of always selecting the compatible
+    remaining activity with the earliest start time does not work.
+        \begin{customsolutionbox}
+            Suppose we have 3 events $e_1, e_2, e_3$ with start and finish times below: 
+            \begin{itemize}
+                \item $e_1 = [1, 10]$
+                \item $e_2 = [3, 5]$
+                \item $e_3 = [6, 9]$
+            \end{itemize}
+            By greedy lemma, we first pick $e_1$, hence $MNOS = |\{e_1\}| = 1$ because $e_1$ overlaps with $e_2$ and $e_3$, but the optimal $MNOS = |\{e_2, e_3\}| = 2$ hence picking the earliest
+            start time always doesn't yield the max-size set.
+        \end{customsolutionbox}
+\end{parts}

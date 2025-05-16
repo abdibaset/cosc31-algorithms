@@ -1,0 +1,107 @@
+\textbf{Party Planning} \\
+Professor Stewart is consulting for the president of a corporation that is planning a company party.
+The company has a hierarchical structure; that is, the supervisor relation forms a tree rooted at the
+president. The personnel office has ranked each employee with a conviviality rating, which is a real
+number. In order to make the party fun for all attendees, the president does not want both an employee
+and his or her immediate supervisor to attend. Professor Stewart is given the tree that describes the
+structure of the corporation, using the left-child, right-sibling representation (read my notes on the next
+page to understand/recall this representation and how to traverse a tree represented in this manner).
+Each node of the tree holds, in addition to the pointers, the name of an employee and that employee’s
+conviviality ranking (in your algorithm, if you need to introduce a constant number of more fields
+in a node, you can assume that they have always been there for you to use them). Give a dynamic
+programming algorithm that prints out a guest list that maximizes the sum of the conviviality ratings
+of the guests.
+Your solution must include all of the steps of dynamic programming emphasized in the lecture.
+
+\begin{customsolutionbox}
+    \underline{Clever observation}: For any parent node, we either include it in the guest list and exclude all its children, 
+    or exclude it and choose the best possible combination of its children. We maintain two lists: one if the president is included, 
+    and one if the president is excluded. We recursively compute the best option for each node.
+
+    \underline{Notation}: Let $x$ be a node in the tree. Define:
+    \begin{itemize}
+        \item $Include(x)$: Maximum conviviality of subtree rooted at $x$ if $x$ is invited.
+        \item $Exclude(x)$: Maximum conviviality of subtree rooted at $x$ if $x$ is not invited.
+    \end{itemize}
+
+    \underline{Recurrence}:
+    \[
+    Include(x) = x.\texttt{val} + \sum_{\text{child } y \text{ of } x} Exclude(y)
+    \]
+    \[
+    Exclude(x) = \sum_{\text{child } y \text{ of } x} \max(Include(y), Exclude(y))
+    \]
+
+    \[
+    \text{MaxConviviality}(x) =
+    \begin{cases}
+        0 & \text{if } x=NULL \\
+        x.\texttt{val} + \sum\limits_{\text{child } y} \texttt{Exclude}(y), & \text{if } x \text{ is invited} \\
+        \sum\limits_{\text{child } y} \max(\texttt{Include}(y), \texttt{Exclude}(y)), & \text{if } x \text{ is not invited}
+    \end{cases}
+    \]
+
+    \[\text{MaxConviviality}(x) = max(Include(x), Exclude(x))\]
+    \[\text{guest list} = \begin{cases}
+        include\_root\_list & \text{ if } Include(x) > Exclude(x) \\
+        exclude\_root\_list & \text{ otherwise}
+    \end{cases}\]
+
+    \begin{algorithm}[H]
+        \caption{Compute Max Conviviality and Guest List}
+        \SetKwFunction{FFindGuests}{FindGuests}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn{\FFindGuests($root$)}{
+            $(inc, inc\_list, exc, exc\_list) \gets$ ComputeConviviality(root) \\
+    
+            \If{$inc > exc$}{
+                print the $inc\_list$
+            }
+            \Else{
+                print the $exc\_list$
+            }
+        }
+
+        \SetKwFunction{FCompute}{ComputeConviviality}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn{\FCompute{$x$: node}}{
+            \If{$x = \texttt{NULL}$}{
+                \KwRet $(0,\ [\ ], 0, [\ ])$ \tcp*{(max\_value, guest\_list)}
+            }
+            \vspace{1em}
+            $include\_parent \gets x.\texttt{val}$ \\
+            $include\_list \gets [x.\texttt{id}]$ \\
+            $exclude\_parent \gets 0$ \\
+            $exclude\_list \gets [\ ]$
+
+            \vspace{1em}
+            $child \gets x.\texttt{lmc}$ \\
+            \While{$child \neq \texttt{NULL}$}{
+                $(child\_inc,\ child\_inc\_list,\ child\_exc,\ child\_exc\_list) \gets$ ComputeConviviality($child$) 
+                
+                $include\_parent \hs += child\_exc$ \\
+                $include\_list \hs += child\_exc\_list$ 
+
+                \If{$child\_inc > child\_exc$}{
+                    $exclude\_parent \hs += child\_inc$ \\
+                    $exclude\_list \hs += child\_inc\_list$
+                }
+                \Else{
+                    $exclude\_parent \hs += child\_exc$ \\
+                    $exclude\_list \hs += child\_exc\_list$
+                }
+
+                $child \gets child.\texttt{rs}$
+            }
+
+        
+            \KwRet $(include\_parent, include\_list, exclude\_parent, exclude\_list)$
+        }
+    \end{algorithm}
+        
+          
+        
+    \underline{Time complexity}: $O(n)$ where $n$ is the number of nodes in the tree. \\
+    \underline{Space complexity}: $O(n)$ for recursion stack space.
+\end{customsolutionbox}
+
