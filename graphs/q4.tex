@@ -1,0 +1,52 @@
+\textbf{DFS Counterexamples} \\
+Give a counterexample to each of the following statements. As you know, whenever you are asked to
+give a counterexample, your answer should meet three criteria: (i) you should give a counterexample,
+(ii) you should explain why it is a counterexample, and (iii) your counterexample should be as simple
+as possible. \\
+
+\definecolor{processblue}{rgb}{0.0, 0.6, 0.8}
+
+\begin{center}
+    \begin{tikzpicture}[->, thick, node distance=2.5cm, every node/.style={circle, draw=processblue, fill=white, minimum size=1.2cm}]
+        \node (A) {A};
+        \node (B) [below left=of A] {B};
+        \node (C) [below right=of A] {C};
+    
+        \draw [bend right] (A) to (B);
+        \draw (B) -- (A);
+        \draw (A) -- (C);
+    \end{tikzpicture}
+    \end{center}
+    
+
+\begin{parts}
+    \part If a directed graph $G$ contains a path from $u$ to $v$ and if $u.d < v.d$ in a depth-first search of $G$,
+    then $v$ is a descendent of $u$ in the depth-first forest produced.
+    \begin{customsolutionbox}
+        Consider the directed graph $G$ with vertices $\{A, B, C\}$ and edges: $A \rightarrow B$, $B \rightarrow A$ and $A \rightarrow C$.
+
+        Start DFS from vertex $A$, then visit $B$ we have $B.d= 2, B.f = 3$. After finishing exploring B, start DFS from $C$ and $C.d = 4$ and $C.f = 5$. 
+        So the path $B \rightarrow C$ exists,
+        and $B.d (2) < (4) C.d$, but $C$ is \textbf{not} a descendant of $B$ in the DFS forest because the DFF forest produced by DFS is:
+        \begin{center}
+            \begin{tikzpicture}[->, thick, node distance=2.5cm, every node/.style={circle, draw=processblue, fill=white, minimum size=1.2cm}]
+                \node (A) {A};
+                \node (B) [below left=of A] {B};
+                \node (C) [below right=of A] {C};
+            
+                \draw (A) -- (B);
+                \draw (A) -- (C);
+            \end{tikzpicture}
+            \end{center}
+    \end{customsolutionbox}
+
+    \part If a directed graph G contains a path from u to v, then any depth-first search of G must result in
+    $v.d \leq u.f$.
+        \begin{customsolutionbox}
+            Similarly consider the directed graph $G$ with vertices $\{A, B, C\}$ and edges: $A \rightarrow B$, $B \rightarrow A$ and $A \rightarrow C$ shown above.
+            Start DFS from vertex $A$, then visit $B$ we have $B.d= 2, B.f = 3$. After finishing exploring B, start DFS from $C$ and $C.d = 4$ and $C.f = 5$.
+            We see that $B.f = 3$ and $C.d = 4$. Although there is a path from $B$ to $C$, we have $C.d (4) > B.f (3)$ hence the contrary of the statement is true.
+        \end{customsolutionbox}        
+        
+
+\end{parts}

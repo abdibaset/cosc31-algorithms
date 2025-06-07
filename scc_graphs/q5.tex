@@ -1,0 +1,203 @@
+\textbf{All Pairs Shortest Paths} \\
+Let Gbe a digraph, with edge weights given by$w: E(G) \rightarrow \R$. Assume that $V(G) = \{1,2,\ldots,n\}$. In
+class we study the Bellman-Ford algorithm that computes shortest paths to all vertices from a given
+source vertex $s \in V(G)$. Suppose instead that we wish to compute the shortest paths from every vertex
+to every vertex, i.e., we want to compute $\delta(i,j)$ for all $i,j \in V(G)$, where $\delta(i,j)$ is the weight of a
+shortest path from $i$ to $j$. One solution would be to run Bellman-Ford $n$ times, once for each $s \in V(G)$,
+but this solution would take V ×O(nm) = O(n2m) time. Since m can be as high as n2, the solution
+can be as expensive as O(n4). Can we do better? The answer is yes: we can design a O(n3)-time
+algorithm. How? Well, read on. \\
+
+If $i_1,i_2,\ldots, i_k$ is a path $p$ in a graph $G$, we call $i_2,i_3,\ldots,i_k-1$, which are all but the start and end
+vertices on path p, the intermediate vertices on p. For example, if $p$ is $3, 6, 2, 1, 4$, the intermediate
+vertices are $6, 2, 1$. For another example, if $p$ is $3, 6, 2, 4, 1, 4$, then the intermediate vertices are $6, 2,
+4, 1$ (notice that even though 4 is the end vertex, it is counted as an intermediate vertex since it also
+occurs as a non-start and a non-end vertex).
+
+\begin{parts}
+    \part Write a recurrence for $d^k_{i,j}$ , including base cases(s).
+        \begin{customsolutionbox}
+            \[ 
+                d^k_{i, j} = \begin{cases}
+                    0 & \text{ if } k = 0 \text{ and } i = j \\
+                    w(i, j) & \text{ if } k = 0 \text{ and } i \ne j \\
+                    \infty & \text{ if } P^{k}_{i, j} = \emptyset\\
+                    -\infty & \text{ if path in } P^{k}_{i, j} \text{ has a negative weight cycle} \\
+                    \min(d^{k-1}_{i, j}, d^{k-1}_{i, k}+d^{k-1}_{k, j}) & \text{ otherwise}
+                \end{cases}
+            \]
+        \end{customsolutionbox}
+    \part Use this recurrence to write an algorithm that, given an adjacency matrix Afor a weighted digraph $G$, returns the following two 
+    quantities, for all $i,j \in V(G)$:
+        \begin{itemize}
+            \item $\delta(i, j)$
+            \item $\pi(i, j)$, where $\pi(i, j)$ is the last vertex before $j$ on a shortest path from $i$ to $j$ if $i \ne j$ and 
+            $\delta(i, j) \not \in \{-\infty, \infty\}$; and $\pi(i, j) = nil$ otherwise.
+        \end{itemize}
+        \begin{customsolutionbox}
+            \begin{algorithm}[H]
+            \caption{Floyd-Warshall using $O(n^3)$ space}
+            \SetKwFunction{FAllPairs}{AllPairsShortestPaths}
+            \SetKwProg{Fn}{Function}{:}{}
+            \Fn{\FAllPairs{$A$}}{
+                \tcp{Input: $A[i][j]$ is the weight of edge $(i,j)$ or $\infty$ if no edge}
+                \tcp{Step 1: Initialize $d[0 \ldots n, 1 \ldots n, 1 \ldots n]$ and $\pi[1 \ldots n, 1 \ldots n]$}
+                \For{$i \gets 1$ \KwTo $n$}{
+                    \For{$j \gets 1$ \KwTo $n$}{
+                        \If{$i = j$}{
+                            $d[0, i, j] \gets 0$,\quad $\pi[i, j] \gets \text{nil}$
+                        }
+                        \ElseIf{$A[i, j] \ne \infty$}{
+                            $d[0, i, j] \gets A[i, j]$,\quad $\pi[i, j] \gets i$
+                        }
+                        \Else{
+                            $d[0, i,j] \gets \infty$,\quad $\pi[i, j] \gets \text{nil}$
+                        }
+                    }
+                }
+
+                \tcp{Step 2: Apply recurrence for k = 1 to n}
+                \For{$k \gets 1$ \KwTo $n$}{
+                    \For{$i \gets 1$ \KwTo $n$}{
+                        \For{$j \gets 1$ \KwTo $n$}{
+                            \If{$d[k-1, i, k] + d[k-1, k, j] < d[k-1, i, j]$}{
+                                $d[k, i, j] \gets d[k-1, i, k] + d[k-1, k, j]$ \\
+                                $\pi[i, j] \gets \pi[k, j]$
+                            }
+                            \Else{
+                                $d[k, i, j] \gets d[k-1, i, j]$
+                            }
+                        }
+                    }
+                }
+
+                \Return{$d[n], \pi$}
+            }
+            \end{algorithm}
+            \end{customsolutionbox}
+    \part State how to modify the above algorithm so that it still runs in $O(n^3)$ time, but takes only $O(n^2)$ space. 
+    Your algorithm should of course remain correct, run in $O(n^3)$ time and take $O(n^2)$ space,
+            \begin{customsolutionbox}
+                To reduce the space complexity to $O(n^2)$ while preserving the $O(n^3)$ time complexity, we modify the algorithm as follows:
+
+                \begin{algorithm}[H]
+                \caption{Floyd-Warshall with $O(n^2)$ space}
+                \SetKwFunction{FAllPairs}{AllPairsShortestPathsSpaceOptimized}
+                \SetKwProg{Fn}{Function}{:}{}
+                \Fn{\FAllPairs{$A$}}{
+                    Initialize $d[1 \ldots n, 1 \ldots n]$ and $\pi[1 \ldots n, 1 \ldots n]$
+                    \For{$i \gets 1$ \KwTo $n$}{
+                        \For{$j \gets 1$ \KwTo $n$}{
+                            \If{$i = j$}{
+                                $d[i, j] \gets 0$,\quad $\pi[i,j] \gets \text{nil}$
+                            }
+                            \ElseIf{$A[i][j] \ne \infty$}{
+                                $d[i, j] \gets A[i, j]$,\quad $\pi[i, j] \gets i$
+                            }
+                            \Else{
+                                $d[i, j] \gets \infty$,\quad $\pi[i, j] \gets \text{nil}$
+                            }
+                        }
+                    }
+
+                    \For{$k \gets 1$ \KwTo $n$}{
+                        \For{$i \gets 1$ \KwTo $n$}{
+                            \For{$j \gets 1$ \KwTo $n$}{
+                                \If{$d[i, k] + d[k, j] < d[i, j]$}{
+                                    $d[i, j] \gets d[i, k] + d[k, j]$ \\
+                                    $\pi[i][j] \gets \pi[k, j]$
+                                }
+                            }
+                        }
+                    }
+
+                    \Return{$d, \pi$}
+                }
+                \end{algorithm}
+                \end{customsolutionbox}
+
+        \part Write the invariant for only the outermost loop in your algorithm for Part (c). You don't need to
+prove your invariant correct.
+                \begin{customsolutionbox}
+                    \begin{itemize}
+                        \item $1 \leq k \leq n+1$
+                        \item $\forall i, j \in V, i \ne j d[i, j]$ contains the minimum weight of a path from $i$ to $j$ whose 
+                        intermediate vertices are in the set $\{1, 2, \ldots, k-1\}$
+                    \end{itemize}
+                \end{customsolutionbox}
+        \part Write a method that, given $i,j \in V(G)$, uses the information computed by your algorithm to output a shortest path from $i$ to $j$ if 
+        $\delta(i,j) \not \in \{-\infty,\infty\}$.
+                \begin{customsolutionbox}
+                    To achieve, we can the $\pi(i, j)$ returned from part c rescontruct the path from $i$ to $j$.
+                    \begin{algorithm}[H]
+                        \caption{GetShortestPath$(i, j, \pi)$}
+                        \SetKwFunction{FGetPath}{GetShortestPath}
+                        \SetKwProg{Fn}{Function}{:}{}
+                        \Fn{\FGetPath{$i, j, \pi$}}{
+                            \If{$\pi[i][j] = \text{nil}$}{
+                                \Return{``No path from $i$ to $j$''}
+                            }
+
+                            path $\gets$ empty list \\
+                            current $\gets j$ \\
+                            \While{$current \ne i$}{
+                                insert $current$ at the beginning of $path$ \\
+                                $current \gets \pi[i][current]$ \\
+                                \If{$current = \text{nil}$}{
+                                    \Return{``No path from $i$ to $j$''}
+                                }
+                            }
+                            insert $i$ at the beginning of $path$ \\
+                            \Return{$path$}
+                        }
+                    \end{algorithm}
+                \end{customsolutionbox}
+        \part  Write a method that outputs whether G has a negative weight simple cycle and, if it does, it
+            outputs a simple cycle in G. Your method is not required to do anything more than what I asked
+            for (for instance, it can stop and return as soon as it is able to answer the question asked).
+
+            \begin{customsolutionbox}
+                \begin{algorithm}[H]
+                \caption{DetectNegativeCycle($d, \pi$)}
+                \SetKwFunction{FDetect}{DetectNegativeCycle}
+                \SetKwProg{Fn}{Function}{:}{}
+                \Fn{\FDetect{$d, \pi$}}{
+                    \For{$v \gets 1$ \KwTo $n$}{
+                        \If{$d[v][v] < 0$}{
+                            % \tcp{A negative-weight cycle is reachable from $v$}
+
+                            visited $\gets$ empty set \\
+                            cycle $\gets$ empty list \\
+                            current $\gets v$
+
+                            \While{$current \not\in$ visited}{
+                                add $current$ to $visited$ \\
+                                current $\gets \pi[v][current]$ \\
+                                \If{$current = \text{nil}$}{
+                                    \Return{``No path traceable to form a cycle''}
+                                }
+                            }
+
+                            % \tcp{Found the start of the cycle at current}
+                            start $\gets current$ \\
+                            cycle $\gets$ list with $start$ \\
+                            current $\gets \pi[v][start]$
+
+                            \While{$current \ne start$}{
+                                insert $current$ at the beginning of $cycle$ \\
+                                current $\gets \pi[v][current]$
+                            }
+
+                            insert $start$ at the beginning of $cycle$ \\
+                            \Return{``Negative-weight cycle found: '', cycle}
+                        }
+                    }
+
+                    \Return{``No negative-weight cycle found.''}
+                }
+                \end{algorithm}
+                \textbf{Explanation:} The algorithm checks each vertex $v$ for a negative weight cycle by examining the diagonal of the distance matrix $d[v, v]$
+                and uses the predecessor matrix $\pi$ to trace back the cycle. If a negative cycle is found, it constructs the cycle by following the predecessors until it loops back to the starting vertex.
+            \end{customsolutionbox}
+
+\end{parts}

@@ -5,11 +5,12 @@
 \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
 \RestyleAlgo{algoruled}    
 \DontPrintSemicolon       
-\SetAlgoNlRelativeSize{-1}
+% \SetAlgoVlined
+% \SetAlgoNlRelativeSize{-1}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
-% \usepackage{algorithmicx}
-% \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{algorithmicx}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
 \usepackage{enumerate}
 \usepackage{enumitem}
 \usepackage{etoolbox}
@@ -27,6 +28,7 @@
 \tcbuselibrary{listings, breakable, skins}
 \usepackage{float}
 \usepackage{enumitem}
+\usetikzlibrary{positioning}
 \setlistdepth{100}
 \newcommand{\R}{\ensuremath{\mathbb{R}}}
 \newcommand{\N}{\ensuremath{\mathbb{N}\hspace{1.0mm}}}
@@ -35,7 +37,7 @@
 \newcommand{\C}{\ensuremath{\mathbb{C}}}
 % formatting
 \newcommand{\hs}{\hspace{1.0mm}} % horizontal space; mostly in equations
-\renewcommand{\thealgorithm}{}  % removes numbering from algorithm annotation
+% \renewcommand{\thealgorithm}{}  % removes numbering from algorithm annotation
 \makeatletter
 \def\exam@MakeFramed#1{\begin{mdframed}}
 \def\endexam@MakeFramed{\end{mdframed}}

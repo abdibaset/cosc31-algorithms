@@ -1,0 +1,96 @@
+\textbf{Bor\v{u}vka's Algorithm} \\
+\begin{parts}
+    \part An English explanation of Bor\v{u}vka's Algorithm
+        \begin{customsolutionbox}
+            Given an undirected, connected graph $G = (V, E)$, Bor\v{u}vka's Algorithm finds a minimum spanning tree (MST) by progressively merging components using the lightest outgoing edges. The algorithm proceeds in phases, each consisting of the following steps:
+            \begin{enumerate}
+                \item For each component (initially, each vertex is its own component), find the lightest edge connecting it to a different component.
+                \item Add all such lightest edges to the MST. This merges some components together.
+                \item Repeat the process on the new set of components until only one component remains — the MST.
+            \end{enumerate}
+        \end{customsolutionbox}
+        
+    \part Pseudocode for Bor\v{u}vka's Algorithm
+        \begin{customsolutionbox}
+            \begin{algorithm}[H]
+                \caption{Bor\v{u}vka's Algorithm}
+                \SetKwFunction{FBoruvka}{Boruvka}
+                \SetKwProg{Fn}{Function}{:}{}
+                \Fn{\FBoruvka{$G = (V, E)$}}{
+                    $T \gets \emptyset$  \\
+                    $components \gets$ \texttt{MakeSet}$(V)$ \\
+                    
+                    \While{$\texttt{numComponents}(components) > 1$}{
+                        $lightestEdges \gets \emptyset$
+                        
+                        \ForEach{$C \in components$}{
+                            $minEdge \gets \texttt{null}$
+                            
+                            \ForEach{$e = (u, v) \in E$ where $u \in C$, $v \notin C$}{
+                                \If{$minEdge = \texttt{null}$ \textbf{or} $w(e) < w(minEdge)$}{
+                                    $minEdge \gets e$
+                                }
+                            }
+                            
+                            \If{$minEdge \ne \texttt{null}$}{
+                                $lightestEdges \gets lightestEdges \cup \{minEdge\}$
+                            }
+                        }
+                        
+                        \ForEach{$e \in lightestEdges$}{
+                            \If{$e$ connects two different components}{
+                                $T \gets T \cup \{e\}$ \\
+                                \texttt{Union}(components, endpoints of $e$)
+                            }
+                        }
+                    }
+                    
+                    \Return $T$
+                }
+            \end{algorithm}
+        \end{customsolutionbox}
+
+    \part A proof of correctness for Bor\v{u}vka's Algorithm
+            \begin{customsolutionbox}
+                We prove Bor\v{u}vka’s Algorithm is correct by showing that it always produces a minimum spanning tree (MST) of the input graph $G = (V, E)$. The key invariant maintained throughout the algorithm is:
+
+                \begin{center}
+                    \textit{Each edge added to the tree is a light edge crossing some cut of the current components.}
+                \end{center}
+
+                \textbf{Cut Property:} In any connected, undirected, weighted graph, the lightest edge crossing any cut is guaranteed to be part of some MST.
+
+                \begin{itemize}
+                    \item In each iteration, Bor\v{u}vka's algorithm identifies the lightest edge connecting each component to another.
+                    \item Each such edge crosses a cut between that component and the rest of the graph.
+                    \item By the cut property, each edge is safe to add to the MST.
+                \end{itemize}
+
+                Hence, all edges added are part of some MST. Since edges are only added between distinct components, cycles are never introduced. If we merge two trees of sizes $n_1$ and $n_2$, each with $n_1 - 1$ and $n_2 - 1$ edges respectively, and add one edge between them, the total becomes:
+
+                \[
+                    (n_1 - 1) + (n_2 - 1) + 1 = n_1 + n_2 - 1,
+                \]
+
+                which is exactly the number of edges in a tree on $n_1 + n_2$ vertices.
+
+                Because the algorithm keeps merging trees without creating cycles and continues until all vertices are connected, the final result is a spanning tree. Since all added edges are safe (by the cut property), this tree is a valid MST.
+            \end{customsolutionbox}
+    
+
+    \part The time complexity of Bor\v{u}vka's Algorithm, along with an explanation of how that time complexity is derived.
+        \begin{customsolutionbox}
+            The time complexity of Bor\v{u}vka’s Algorithm is $O(m \log n)$, where $m = |E|$ is the number of edges and $n = |V|$ is the number of vertices.
+
+            \begin{itemize}
+                \item \textbf{Finding the lightest edge for each component:} In each phase, we scan all edges to find the lightest outgoing edge from each component. This takes $O(m)$ time.
+                
+                \item \textbf{Merging components:} Each added edge connects two distinct components, reducing the number of components. Since the number of components at least halves in each phase, there are at most $O(\log n)$ phases.
+
+                \item \textbf{Total work:} Each phase costs $O(m)$ and there are $O(\log n)$ phases, leading to a total time complexity of $O(m \log n)$.
+            \end{itemize}
+            Thus, the overall time complexity of Bor\v{u}vka's Algorithm is $O(m \log n)$.
+        \end{customsolutionbox}
+
+
+\end{parts}

@@ -1,0 +1,57 @@
+\textbf{Understanding MSTs} \\
+\begin{parts}
+    \part Let $(u, v)$ be a minimum-weight edge in a connected graph G. Explain how the Greedy Choice
+        Lemma that we proved in class implies that $(u, v)$ belongs to some minimum spanning tree of G.
+        \begin{customsolutionbox}
+            Let $(u, v)$ be a minimum-weight edge in the connected graph $G$. Consider the cut $(S, V \setminus S)$ where $S = \{u\}$ and 
+            $v \in V \setminus S$. Since $G$ is connected, such a cut exists and $(u, v)$ crosses it. Because $(u, v)$ has the smallest weight 
+            among all edges in $G$, it is the lightest edge crossing this cut. By the Greedy Choice Lemma, the lightest edge crossing any 
+            cut belongs to some minimum spanning tree of $G$. Thus, $(u, v)$ is included in some MST of $G$.
+        \end{customsolutionbox}
+    
+    \part Give a simple example of a connected graph such that the set of edges
+        \[\{(u, v) \in E | \text{ there exists a cut } (S, V - S) \text{ such that } (u, v) \text{ is a light edge crossing } (S, V - S)\} \]
+        does not form a minimum spanning tree
+
+        \begin{customsolutionbox}
+            Consider the graph $G$ with vertices $V = \{a, b, c\}$ and edges $E = \{(a, b), (b, c), (a, c)\}$ with weights:
+            \[
+            w(a, b) = 2, \quad w(b, c) = 2, \quad w(a, c) = 2. \]
+            In this graph, every edge is a light edge crossing the cut $(S, V - S)$ for any non-empty subset $S$ of $V$.
+            However, the set of edges $\{(a, b), (b, c), (a, c)\}$ does not form a minimum spanning tree because it contains all edges hence 
+            forming a cycle. The minimum spanning tree of this graph can be formed by any two edges, for example, $\{(a, b), (b, c)\}$ or $\{(a, c), (b, c)\}$.
+        \end{customsolutionbox}
+    
+    \part Prove that a graph has a unique minimum spanning tree if, for every cut of the graph, there is a unique light edge crossing the cut.
+        \begin{customsolutionbox}
+            Suppose, for contradiction, that $G = (V, E)$ has two distinct MSTs, $T_1$ and $T_2$. Since $T_1 \notin T_2$, $\exists (u, v) \in E$ such 
+            that $(u, v) \in T_1$ but $(u, v) \notin T_2$.
+            Consider the cut $(S, V \setminus S)$ of $T_1$ where $u \in S$ and $v \in V \setminus S$. Since $(u, v)$ is in $T_1$, it must cross this cut. 
+            By hypothesis, this cut has a unique light edge, and since $(u, v)$ is in $T_1$, it must be that unique light edge. But $T_2$, not containing $(u, v)$, must include a 
+            different edge $(x, y)$ crossing the same cut. This contradicts the uniqueness of the light edge.
+            Therefore, no such $T_2$ can exist, and the MST must be unique.
+    \end{customsolutionbox}
+
+    
+    \part Show that the converse is not true by giving an example of a graph that has a unique MST even though some cut does not have a unique light edge.
+        \begin{customsolutionbox}
+            Consider the graph $G$ with vertices $V = \{a, b, c\}$ and edges:
+            \[
+            w(a, b) = 1,\quad w(a, c) = 1,\quad w(b, c) = 2.
+            \]
+
+            Apply Kruskal’s Algorithm:
+            \begin{itemize}
+                \item Pick $(a, b)$ — weight 1
+                \item Pick $(a, c)$ — weight 1
+                \item Edge $(b, c)$ is skipped (would create a cycle)
+            \end{itemize}
+            So the unique MST is $\{(a, b), (a, c)\}$.
+
+            Now consider the cut $(\{b, c\}, \{a\})$. Both edges $(a, b)$ and $(a, c)$ cross this cut and have the same minimum weight of 1.
+
+            Thus, this cut has two lightest edges, but the MST is unique. Therefore, the converse is false.
+        \end{customsolutionbox}
+
+
+\end{parts}

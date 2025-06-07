@@ -1,0 +1,55 @@
+\textbf{A Different Implementation of Dijkstra's}
+\begin{parts}
+    \part Let $G = (V, E)$ be a weighted, directed graph with nonnegative weight function $w : E \rightarrow
+    \{0, 1, 2, \ldots W \}$, for some nonnegative integer $W$. Implement Dijkstra's algorithm to compute
+    the shortest paths from a given source vertex s in $O(W V + E)$ time. Explain why your algorithm
+    is correct and why its time complexity to be $O(WV +E)$.
+\end{parts}
+\begin{customsolutionbox}
+    \begin{algorithm}[H]
+        \caption{Dial's Algorithm}
+        \SetKwFunction{FDial}{DialDijkstra}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn{\FDial{$G = (V, E), s, W$}}{
+            Initialize $dist[v] \gets \infty$ for all $v \in V - \{s\}$, $dist[s] \gets 0$ \\
+            Initialize $buckets[0 \ldots W \cdot |V|]$ as empty lists \\
+            Insert $s$ into $buckets[0]$ \\
+            $curr\_index \gets 0$ \\
+
+            \While{$curr\_index < W \cdot |V|$}{
+                \While{$buckets[curr\_index]$ is empty}{
+                    $curr\_index \gets curr\_index + 1$ \\
+                    \If{$curr\_index = W \cdot |V|$}{ \Return $dist$ }
+                }
+
+                Remove vertex $u$ from $buckets[curr\_index]$ \\
+
+                \ForEach{edge $(u, v) \in E$ with weight $w(u, v)$}{
+                    \If{$dist[v] > dist[u] + w(u, v)$}{
+                        $old\_dist \gets dist[v]$ \\
+                        $dist[v] \gets dist[u] + w(u, v)$ \\
+                        Insert $v$ into $buckets[dist[v]]$
+                    }
+                }
+            }
+
+            \Return $dist$
+        }
+    \end{algorithm}
+
+    \textbf{Explanation:} The algorithm uses an array of buckets indexed by \textit{tentative distance values}. 
+    Each bucket at index $i$ holds all vertices whose current shortest-path estimate is $i$. This structure ensures 
+    that vertices are processed in non-decreasing order of distance—just like in Dijkstra's algorithm with priority queue. \\
+
+    Since all edge weights are integers in $\{0, 1, \ldots, W\}$, the maximum possible shortest-path distance from the source to any vertex is at most $W \cdot |V|$. Therefore, we only need $W \cdot |V|$ buckets.
+
+    Each vertex may be updated and reinserted into a new bucket at most $W$ times (once per possible improvement via edge weights), 
+    and each edge is relaxed at most once. Bucket operations (insertion and deletion) are constant-time, but finding the next non-empty 
+    bucket may take linear time in the worst case. Over the entire run, the cost of scanning buckets is $O(WV)$, and edge relaxations take $O(E)$.
+    Thus, the total runtime is $O(WV + E)$. \\
+
+    The algorithm is correct because it maintains the same invariant as Dijkstra's algorithm: vertices are processed in order of increasing tentative 
+    distance, and once a vertex is processed, its distance is finalized due to nonnegative weights. While the priority queue version achieves 
+    logarithmic time for \texttt{extract-min}, this bucket-based implementation is more efficient when edge weights are small.
+
+\end{customsolutionbox}

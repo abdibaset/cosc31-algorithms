@@ -1,0 +1,91 @@
+\textbf{Kosaraju's algorithm} \\
+Let $G= (V,E)$ be a directed graph with $V= \{1,2,\ldots,n\}$, and $k$ be the number of SCCs of $G$. One
+way to represent the SCCs of $G$ is with an array $S$ of length $n$ such that, for all $i,j \in \{1,2,\ldots,n\}$,
+$S[i] \in \{1,2,\ldots,k\}$ and $S[i] = S[j]$ if and only if vertices $i$ and $j$ are in the same strongly connected
+component of $G$. \\
+
+Write an algorithm of $O(n+m)$ time and space complexity that, given the adjacency list representation
+of a directed graph $G= (V,E)$ with $V= \{1,2,\ldots,n\}$, returns $(k,S)$ where $k$ is the number of SCCs
+of $G$ and $S$ is an array representing the SCCs of $G$.
+
+\begin{algorithm}
+    % \SetAlgoNlRelativeSize{-1}
+    \caption{Kosaraju's Algorithm}
+    \SetKwFunction{FKosaraju}{Kosaraju}
+    \SetKwFunction{DFSOne}{DFSOne}
+    \SetKwFunction{DFSTwo}{DFS2}
+    \SetKwFunction{Transpose}{Transpose}
+    \SetKwProg{Fn}{Function}{:}{}
+
+    \Fn{\FKosaraju{$G = (V, E)$}}{
+        % time $\gets 0$ \\
+        \ForEach{$u \in V$}{
+            $u.visited \gets$ false \\
+        }
+        $A \gets$ empty stack \\
+        \ForEach{$u \in V$}{
+            \If{$u.visited =$ false}{
+                \DFSOne{$u$, A}
+            }
+        }
+
+        $G^T \gets$ \Transpose{$G$} \\
+
+        \ForEach{$u \in V$ in $G^T$}{
+            $u.visited \gets$ false 
+        }
+
+        $S \gets$ empty array \\
+        $k \gets 0$ \\
+
+        \While{$A \ne \perp$}{
+            $u \gets$ pop from stack $A$ \\
+            \If{$u.visited = $ false}{
+                $k \gets k + 1$ \\
+                \DFSTwo{$u$, k, S} 
+            }
+        }
+
+        \Return{$(k, S)$} 
+    }
+
+    % \vspace{0.2cm}
+    \Fn{\DFSOne{$u$, A}}{ 
+        $u.visited \gets$ true \\
+        \ForEach{$v \in Adj[u]$}{
+            \If{$v.visited =$ false}{
+                \DFSOne{$v$, A}
+            }
+        }
+        push $u$ onto stack $A$ 
+    }
+
+    % \vspace{0.2cm}
+    \Fn{\Transpose{$G = (V, E)$}}{
+        $G^T \gets$ new graph with vertices $V$ \\
+        \ForEach{$u \in V$}{
+            \ForEach{$v \in Adj[u]$}{
+                add edge $(v \rightarrow u)$ to $G^T$ 
+            }
+        }
+        \Return{$G^T$} 
+    }
+
+    % \vspace{0.2cm}
+    \Fn{\DFSTwo{$u$, k, S}}{
+        $u.visited \gets$ true \\
+        $S[u] \gets k$ \\
+        append $u$ to $newSCC$ \\
+        \ForEach{$v \in Adj[u]$}{
+            \If{$v.visited =$ false}{
+                \DFSTwo{$v$, S}
+            }
+        }
+    }
+    \textbf{Time Complexity:} The algorithm runs in $O(n + m)$ time, where $n$ is the number of vertices and $m$ is the number of edges. 
+    The first DFS traversal takes $O(n + m)$ time, the transposition of the graph also takes $O(n + m)$ time, and the second DFS traversal also 
+    takes $O(n + m)$ time. Thus, the overall time complexity is linear in terms of the size of the graph. \\
+    
+    \textbf{Space Complexity:} The space complexity is $O(n + m)$ due to the storage of the adjacency list for the transposed graph and the stack used in the 
+    DFS traversals.
+\end{algorithm}

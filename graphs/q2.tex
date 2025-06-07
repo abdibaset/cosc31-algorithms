@@ -1,0 +1,31 @@
+\textbf{Graph transposition} \\
+Write pseudocode for a simple method that, given $n$ and the adjacency list representation of a directed
+graph $G = (V, E)$ of $n$ vertices, returns the adjacency list representation of GT , the transpose of G,
+defined by $(V, E^T )$, where $E^T = \{(u, v) |(v, u)  \in E\}$., State the time complexity. You merely have to
+state the algorithm and its time complexity, and there is no need to justify correctness.
+
+\begin{customsolutionbox}
+    \begin{algorithm}[H]
+        \caption{Graph transposition}
+        \underline{Pre-condition}: $n \leq 1$, $a$ is an array containing the adjacency list of a graph 
+        $G=(V, E)$ \\
+        \underline{Postcondition}: Terminates, and returns an adjacency list of $G'$ which is a transposition 
+        of $G$ \\
+        \SetKwFunction{FGraphTransposition}{GraphTransposition}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn{\FGraphTransposition($a[1 \ldots n]$)}{
+            init $A[1 \ldots n]$ to store transposed \\
+            \For{$i \gets 1$ \KwTo $n$}{
+                curr $\gets a[i]$ \\
+                \While{curr $\ne NULL$}{
+                    $A[curr.val].append(a[i])$ \\
+                    curr $\gets$ curr.next
+                }
+            }
+            \KwRet $A$
+        }
+    \end{algorithm}
+
+    \underline{Time complexity}: $O(n+m)$ where $n = |V|$ and $m = |E|$ \\
+    \underline{Space complexity}: $O(n)$, $n = |V|$
+\end{customsolutionbox}

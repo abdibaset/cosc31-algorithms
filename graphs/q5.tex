@@ -1,0 +1,60 @@
+\textbf{The knight} \\
+A generalized chess board has $N \times N$ squares for some $N \geq 1$. Each square is identified by its two
+dimensional coordinates $(i, j)$, where $i, j \in [1, N ]$. A knight placed at a location $(i, j)$ makes a move by
+moving exactly two steps in some cardinal direction and one step in an orthonogoal direction, so long
+as the new location is on the board—just as a normal knight does in the game of chess. Design an
+algorithm that given a board dimension N , an initial position of the knight $(i, j)$, and a final position
+of the knight $(i', j')$, calculates as output the minimum number of moves the knight needs to make
+to reach the final position from the initial position. (The minimum is $\infty$ if the final position is not
+reachable by a knight making moves starting at the initial position.)
+Design the algorithm to have as low a time complexity as possible. Along with the algorithm, state
+and explain its time complexity.
+\begin{customsolutionbox}
+    \begin{algorithm}[H]
+        \caption{knight problem}
+        \SetKwFunction{FKnight}{knight}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn{\FKnight{$C[1 \ldots N, 1 \ldots N], start, end$}}{
+            \If{start = end}{
+                \Return 0
+            }
+
+            moves $\gets$ [(-2, -1), (-1, -2), (1, -2), (2, -1), (2, 1), (1, 2), (-1, 2), (-2, 1)] \\
+
+            visited $\gets$ 2D array of size $N \times N$ initialized to false \\
+
+            queue $\gets$ empty queue \\
+            enqueue (start, 0) into queue \\
+            mark start as visited
+
+            \While{queue is not empty}{
+                (curr, dist) $\gets$ dequeue from queue \\
+                \ForEach{move in moves}{
+                    next $\gets$ curr + move \\
+                    \If{next is within bounds and not visited}{
+                        \If{next = end}{
+                            \Return dist + 1
+                        }
+                        mark next as visited \\
+                        enqueue (next, dist + 1)
+                    }
+                }
+            }
+
+            \Return $\infty$
+        }
+    \end{algorithm}
+
+    \textbf{Explanation:} The algorithm performs a \textbf{breadth-first search (BFS)} starting from the initial position of the knight. At each level of the BFS, it explores all valid knight moves from the current square. The knight has exactly 8 possible moves, and we enqueue each reachable, unvisited position with its corresponding distance from the start. The BFS guarantees that the first time we reach the target square, we have found the shortest path to it (i.e., the minimum number of moves).
+
+    To ensure we do not visit the same position more than once, we maintain a 2D \texttt{visited} array. We stop the search as soon as the destination is reached, or we exhaust all reachable squares (in which case the destination is unreachable).
+
+        \textbf{Time Complexity:} Each cell on the $N \times N$ board can be visited at most once, and for each cell, we consider 8 constant-time knight moves. Thus, the time complexity is:
+        \[
+        O(N^2)
+        \]
+        which is optimal for this type of grid-based shortest path search.
+
+        \textbf{Space Complexity:} The space used is also $O(N^2)$ for the \texttt{visited} array and the BFS queue.
+
+\end{customsolutionbox}

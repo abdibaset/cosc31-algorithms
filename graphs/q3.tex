@@ -1,0 +1,50 @@
+\textbf{Cycle} \\
+Give an algorithm that, given an undirected graph $G = (V, E)$, outputs whether or not G contains a
+cycle. I require that your algorithm has a time complexity of $O(n)$, independent of m. Explain why
+your algorithm's time complexity is $O(n)$. You don't need to prove your algorithm correct.
+
+\begin{customsolutionbox}
+    \begin{algorithm}[H]
+        \caption{Cycle detection (Undirected Graph with Colors)}
+        \SetKwFunction{FCycleDetection}{CycleDetection}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn{\FCycleDetection{$G(V, E)$}}{
+            \ForEach{$u \in V$}{
+                $u.c \gets \text{white}$ \\
+                $u.\pi \gets \perp$
+            }
+            \ForEach{$u \in V$}{
+                \If{$u.c = \text{white}$ \textbf{and} DFSVisit($u$) = \textbf{true}}{
+                    \Return \textbf{true}
+                }
+            }
+            \Return \textbf{false}
+        }
+
+        \SetKwFunction{FDFSVisit}{DFSVisit}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn{\FDFSVisit{$u$}}{
+            $u.c \gets \text{grey}$ \\
+            \ForEach{$v \in \text{Adj}[u]$}{
+                \If{$v.c = \text{white}$}{
+                    $v.\pi \gets u$ \\
+                    \If{DFSVisit($v$) = \textbf{true}}{
+                        \Return \textbf{true}
+                    }
+                }
+                \ElseIf{$v.c = \text{grey}$ \textbf{and} $v \neq u.\pi$}{
+                    \Return \textbf{true}
+                }
+            }
+            $u.c \gets \text{black}$ \\
+            \Return \textbf{false}
+        }
+    \end{algorithm}
+
+    \textbf{Time complexity}: The DFS explores each vertex once and each edge at most twice. In the worst case, 
+    if the graph has no cycles, then it must be a forest (collection of trees), where $|E| \leq |V| - 1$. 
+    Thus, the total work is $O(|V| + |E|) = O(n)$. If a cycle is found early, the DFS halts, and until that point, 
+    the visited subgraph is also a tree — meaning the number of traversed edges is still at most $|V| - 1$, 
+    giving $O(n)$ time.
+\end{customsolutionbox}
+

@@ -1,0 +1,43 @@
+\text{Semiconnectivity} \\
+A directed graph $G= (V,E)$ is semiconnected if, for all pairs of vertices $u,v \in V$, there is a path from
+$u$ to $v$ or there is a path from $v$ to $u$(or both). Give an efficient algorithm that, given a directed graph
+$G= (V,E)$, outputs whether or not it is semiconnected. Argue the correctness of your algorithm and
+analyze its time complexity to be $\Theta(V + E)$
+
+\begin{customsolutionbox}
+    \begin{algorithm}[H]
+        \caption{Semiconnectivity Check}
+        \SetKwFunction{FSemiconnected}{Semiconnected}
+        \SetKwFunction{FKosaraju}{Kosaraju}
+        \SetKwFunction{FComponentGraph}{ComponentGraph}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn{\FSemiconnected{$G(V, E)$}}{
+            $(k, S) \gets$ FKosaraju{$G$} \textbf{ // SCC ID array; from q1} \\
+            $G^{SCC} \gets$ FComponentGraph{$G, S$} \textbf{ // from q3} \\
+
+            Do topological sort on $G^{SCC}$ \\
+
+            \For{$i \gets 1$ \KwTo $k-1$} {
+                $C_i \gets$ the $i^{th}$ SCC in the topological order \\
+                $C_{i+1} \gets$ the $(i+1)^{th}$ SCC in the topological order \\
+                \If{$C_{i+1} \not\in A^{SCC}[C_i]$} {
+                    \Return \textbf{false}
+                }
+            }
+
+            \Return \textbf{true}
+        }
+    \end{algorithm}
+
+    \textbf{Correctness}: The algorithm first identifies SCCs because semiconnectivity is preserved within SCCs. To check for semiconnectivity of 
+    the SCCs, we construct the component graph $G^{SCC}$ and perform a topological sort. We then verify that each SCC can reach the next one in the 
+    topological order. If any SCC cannot reach the next, the graph is not semiconnected. \\
+
+    \textbf{Time Complexity}: The algorithm runs in $\Theta(V + E)$ time. The Kosaraju's algorithm for finding SCCs runs in $\Theta(V + E)$, and 
+    constructing the component graph also takes $\Theta(V + E)$. The topological sort of the component graph takes $\Theta(V + E)$ as well. Thus, 
+    the overall time complexity is $\Theta(V + E)$. \\
+    
+    \textbf{Space Complexity}: The space complexity is also $\Theta(V + E)$ due to the storage of the adjacency list for the component graph and the 
+    SCC ID array.
+
+\end{customsolutionbox}

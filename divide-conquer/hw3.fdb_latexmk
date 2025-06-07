@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1746487970.96415 "/Users/ab/Desktop/git-projects/cosc31-algorithms/divide-conquer/hw3.tex" "hw3.pdf" "hw3" 1746487972.21932 2
+["pdflatex"] 1747583025.62105 "/Users/ab/Desktop/git-projects/cosc31-algorithms/divide-conquer/hw3.tex" "hw3.pdf" "hw3" 1747583026.9309 2
   "../common.tex" 1745456498.21413 4587 12ea5ca605699779711795606760d210 ""
   "/Users/ab/Desktop/git-projects/cosc31-algorithms/divide-conquer/hw3.tex" 1745465337.7252 306 e10d66602a6e85c8c5a8b9868d5ca8e9 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -219,8 +219,8 @@
   "/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1711097242.2414 5467645 128b85b7cde5f5edc5cb7f1dd7ff8736 ""
   "/usr/local/texlive/2024/texmf-var/web2c/pdftex/pdflatex.fmt" 1711097165 8221436 287ab7e1a90e23aa69752a6d4699d8ff ""
   "/usr/local/texlive/2024/texmf.cnf" 1710266656 577 e590dabc9e28c5b61546e15f63eebcdf ""
-  "hw3.aux" 1746487972.10981 1611 5537c484173aeb8285d94bf82e01ea78 "pdflatex"
-  "hw3.out" 1746487971.77954 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "hw3.aux" 1747583026.83084 1611 5537c484173aeb8285d94bf82e01ea78 "pdflatex"
+  "hw3.out" 1747583026.49304 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
   "hw3.tex" 1745465337.7252 306 e10d66602a6e85c8c5a8b9868d5ca8e9 ""
   "q1.tex" 1746487970.73208 983 eff9f06130c2c19fbeecdd29e8a0145c ""
   "q2.tex" 1745466202.0836 6617 1e0774364968f601bbf9321b77a7a877 ""

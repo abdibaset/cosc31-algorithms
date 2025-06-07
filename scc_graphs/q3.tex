@@ -1,0 +1,41 @@
+\textbf{Component Graph} \\
+Write an algorithm of $\Theta(n+ m)$ time and space complexity that, given
+\begin{itemize}
+    \item the adjacency list A of a directed graph $G= (V,E)$ with $V= \{1,2,\ldots,n\}$, and
+    \item the array S that represents the SCCs of G,
+\end{itemize} 
+returns the adjacency list of the graph GSCC , which I define below exactly as in class:$G^{SCC} = (V^{SCC} ,E^{SCC})$,
+where $V^{SCC} = \{C |C \text{ is an SCC of } G\}$ and $E^{SCC} = \{(C,C') |C  \ne C', \text{and } \exists u \in C,u'  \in C',(u,u') \in E\}$
+
+\begin{customsolutionbox}
+    \begin{algorithm}[H]
+    \caption{Component Graph Construction}
+    \SetKwFunction{FComponentGraph}{ComponentGraph}
+    \SetKwProg{Fn}{Function}{:}{}
+    \Fn{\FComponentGraph{$A, S$}}{
+        Let $n \gets \text{length of } A$ \\
+        Let $k \gets 1 + \max(S)$  \\
+
+        Initialize $A^{SCC}[1 \dots k]$ as empty sets
+
+        \For{$u \gets 1$ \KwTo $n$} {
+            \ForEach{$v \in A[u]$} {
+                \If{$S[u] \ne S[v]$} {
+                    Add $S[v]$ to $A^{SCC}[S[u]]$
+                }
+            }
+        }
+
+        \For{$i \gets 1$ \KwTo $k$} {
+            Convert $A^{SCC}[i]$ from set to list
+        }
+
+        \Return $A^{SCC}$
+    }
+    \end{algorithm}
+    \textbf{Time Complexity:} The algorithm iterates through each vertex $u$ and its adjacency list $A[u]$.
+    Since each edge is processed exactly once, the total time complexity is $\Theta(n + m)$, where $n$ is the 
+    number of vertices and $m$ is the number of edges. The space complexity is also $\Theta(n + m)$ due to the 
+    torage of the adjacency list for the component graph. \\
+    \textbf{Space Complexity:} The space complexity is $\Theta(n + m)$, as we store the adjacency list for the component graph, which contains at most $n$ vertices and $m$ edges.
+\end{customsolutionbox}
